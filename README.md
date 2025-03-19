@@ -7,6 +7,8 @@ Avant toute utilisation du bot, que ce soit en privé ou en public, merci de lir
 - **Créateur** : museau__  
 - **Nous** : Équipe travaillant sur le projet  
 
+⚠️ Ce bot n'est pas terminé, il est toujours en évolution et mise à jour constantes !
+
 ## 🔹 1 - Informations générales  
 L’usage de ce bot peut se faire dans deux contextes :  
 - **En privé** : Utilisation sur un serveur sur invitation (non public).  
