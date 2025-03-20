@@ -76,3 +76,8 @@ Ces restrictions ne peuvent pas être désactivées pour le moment.
 ---
 
 N’hésitez pas à signaler tout bug ou problème à **museau__**.
+
+---
+
+## Remerciements 
+À Cyn, à m'avoir aidé sur certaines parties du code !
