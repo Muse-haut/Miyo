@@ -1,20 +1,25 @@
 # Miyo - Bot Discord
 
-## 📌 Avant-propos  
-Avant toute utilisation du bot, que ce soit en privé ou en public, merci de lire attentivement ce fichier.
+## 📌 Forewords
+
+Before any utilisation of the bot, in private or in public, please read this file.
+
+You can use this bot how you want, but please credit me. 
+
+The following are comments about the use of my bot (not yours with this code), the regulations of my bot, but also its features. If you download and host your own bot using my code, this readme will not regulate your bot, leaving you with complete freedom.
 
 - **Bot** : Miyo#1437  
-- **Créateur** : museau__  
-- **Nous** : Équipe travaillant sur le projet  
+- **Créateur/Creator** : museau__  
+- **Nous/Us** : Équipe travaillant sur le projet/The team behind the project
 
-⚠️ Ce bot n'est pas terminé, il est toujours en évolution et en mise à jour constantes !
+⚠️ This bot isn't finished yet, he's in constant evolution and update quite often
 
-## 🔹 1 - Informations générales  
-L’usage de ce bot peut se faire dans deux contextes :  
-- **En privé** : Utilisation sur un serveur sur invitation (non public).  
-- **En public** : Utilisation sur un serveur accessible librement sur internet.  
+## 🔹 1 - General informations 
+This bot can be used in two context :
+- **In private** : Uses of the bot in a server on invite (non-public)
+- **In public** : Uses of the bot in a server in which we can access with a link somewhere in the internet
 
-L’accès à ce bot est restreint. Pour l’inviter sur votre serveur, l’autorisation du créateur est requise. Contactez-le en message privé pour en faire la demande.  
+For the moment, the access of the bot is limited. If you want to invite him to your server, you'll need to have the authorisation of the creator. Contact him in private messages on discord
 
 ## ⚠ 2 - Clause de non-responsabilité sur le partage de contenu  
 Vous pouvez inclure ce bot dans du contenu en ligne (images, vidéos, streams, etc.), mais toute utilisation dans un cadre illégal, contraire à l’éthique, haineux ou pornographique est interdite. Cela inclut :  
