@@ -72,4 +72,4 @@ The bot is provided "as-is," and we do not guarantee that it will be error-free 
 These Terms of Service are governed by the laws of the jurisdiction in which the bot’s creator resides. Any disputes arising under these terms shall be subject to the exclusive jurisdiction of the local courts.
 
 **11. Acknowledgment**  
-By using the bot, you acknowledge that you have read, understood, and agree to these Terms of Service.
+By using this bot, you affirm that you have read, understood, and agree to Miyo's Terms of Use, Miyo's Privacy Policy as well as the [Discord Terms of Use](https://discord.com/terms#14) and your local laws.
