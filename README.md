@@ -21,68 +21,68 @@ This bot can be used in two context :
 
 For the moment, the access of the bot is limited. If you want to invite him to your server, you'll need to have the authorisation of the creator. Contact him in private messages on discord
 
-## ⚠ 2 - Clause de non-responsabilité sur le partage de contenu  
-Vous pouvez inclure ce bot dans du contenu en ligne (images, vidéos, streams, etc.), mais toute utilisation dans un cadre illégal, contraire à l’éthique, haineux ou pornographique est interdite. Cela inclut :  
+## ⚠ 2 - Content Sharing Disclaimer
+You can include this bot in your online activities (pictures, videos streams...), however, any use in an illegal, unethical, hateful, or pornographic context is prohibited. This includes:
 
-- Contenus pour adultes  
-- Produits commerciaux, illicites ou addictifs  
-- Discours haineux ou incitations à la violence  
-- Contenus choquants, gore ou dangereux  
-- Harcèlement et intimidation  
-- Usurpation d’identité  
-- Spam et liens malveillants  
+- Adult content
+- Commercial, illicit, or addictive products
+- Hate speech or incitement to violence
+- Shocking, gory, or dangerous content
+- Harassment and bullying
+- Identity theft
+- Spam and malicious links
 
-Nous déclinons toute responsabilité en cas de non-respect de ces règles. Des sanctions pourront être appliquées (bannissement, interdiction d’utilisation, etc.).  
+We decline all responsibility for non-compliance with these rules. Sanctions may be applied (ban, prohibition of use, etc.).
 
-## ⚙ 3 - Fonctionnalités  
-Miyo est principalement un **chatbot**, avec plusieurs fonctionnalités additionnelles.  
+## ⚙ 3 - Features  
+Miyo is primarily a **chatbot**, with several additional features.  
 
-### 📌 Prérequis  
-Pour assurer un bon fonctionnement, veuillez inclure :  
-- **MuseaudeBot#2082** (optionnel)  
+### 📌 Prerequisites  
+To ensure proper operation, please include:  
+- **MuseaudeBot#2082** (optional)  
 
-### 📝 Commandes principales  
-- `hug` : Faire un câlin à quelqu’un  
-- `punch` : Frapper quelqu’un  
-- `kiss` : Embrasser quelqu’un  
-- `trigger` : Montrer son mécontentement  
+### 📝 Main Orders  
+- ‘hug’: Give someone a hug  
+- ‘punch’: Hit someone  
+- `kiss': Kissing someone  
+- ‘trigger’: Show dissatisfaction  
 
-### 🎮 Commandes pour *osu!*  
-- `osulink` : Lier son compte Discord à *osu!*  
-- `osuunlink` : Délier son compte  
-- `rs` : Voir son dernier score  
-- `osurdm` : Obtenir une beatmap aléatoire selon la difficulté  
+### 🎮 Orders for *osu! *  
+- ‘osulink’: Link your Discord account to *osu! *  
+- ‘osuunlink’: Unbind account  
+- ‘rs’: See his last score  
+- ‘osurdm’: Get a random beatmap by difficulty  
 
-### 🎲 Commandes diverses  
-- `dice` : Lancer un dé (1-6)  
-- `talk` : Générer une phrase aléatoire  
+### 🎲 Miscellaneous  
+- ‘dice’: Roll a die (1-6)  
+- ‘talk’: Generate a random phrase  
 
-## 🤖 4 - Interactions du bot  
-En plus des commandes, Miyo interagit de plusieurs manières :  
+## 🤖 4 - Bot interactions  
+In addition to the commands, Miyo interacts in several ways:  
 
-- **IA intégrée** : Active lorsque vous mentionnez *Miyo* ou répondez à ses messages.  
-- **Réactions spécifiques** : Réagit à certains mots et types de médias.  
-- **Réaction "feur"** : Lorsque quelqu’un termine une phrase par “quoi”, le bot répond automatiquement “feur”.  
+- **IA integrated**: Active when you mention *Miyo* or reply to his messages.  
+- **Specific reactions**: Reacts to certain words and media types.  
+- **Reaction "feur"**: When someone ends a sentence with “what”, the bot automatically responds “feur”.  
 
-## 🛡 5 - Modération du bot  
-Miyo possède un système de modération intégré, avec les restrictions suivantes :  
+## 🛡 5 - Bot moderation  
+Miyo has an integrated moderation system, with the following restrictions:  
 
-- Blocage des liens vers des sites pornographiques connus  
-- Détection et sanction du spam (muting automatique)  
-- Limitation de l’abus des commandes du bot  
+- Block links to known porn sites  
+- Detection and sanction of spam (automatic muting)  
+- Limiting the abuse of bot commands  
 
-Ces restrictions ne peuvent pas être désactivées pour le moment.  
+These restrictions cannot be disabled at this time.  
 
-## ℹ 6 - Informations importantes  
-- Miyo ne peut pas rester en ligne en permanence, il est hébergé par son créateur.  
-- Lorsqu’il est hors ligne, les commandes ne fonctionnent pas.  
-- Le bot est en mise à jour constante, certaines fonctionnalités peuvent être modifiées ou supprimées.  
-
----
-
-N’hésitez pas à signaler tout bug ou problème à **museau__**.
+## i 6 - Important information  
+- Miyo cannot stay online all the time, it is hosted by its creator.  
+- When offline, the commands do not work.  
+- The bot is constantly updated, some features may be changed or removed.  
 
 ---
 
-## Remerciements 
-À Cyn, à m'avoir aidé sur certaines parties du code !
+Please report any bugs or issues to **museau__**.
+
+---
+
+## Acknowledgements 
+To Cyn, for helping me with some parts of the code!
