@@ -1,16 +1,16 @@
 ##############################
 # CONFIGURATION & INITIALIZATION
 ##############################
-
 require 'discordrb'
 require 'httparty'
 require 'json'
 require 'net/http'
 require 'uri'
 require 'nokogiri'
+require 'fileutils'
 
 config = JSON.parse(File.read('config.json'))
-CLIENT_ID = ''
+CLIENT_ID         = config['Miyo']['Client_id']
 OSU_CLIENT_ID     = config['Miyo']['Osu_client_id']
 OSU_CLIENT_SECRET = config['Miyo']['Osu_client_secret']
 miyo_token        = config['Miyo']['token']
@@ -34,6 +34,11 @@ EXCLUDED_USERS = [935207909183356951]
 TRIGGER_WORDS = ['quoi', 'quoi ?', 'quoi?', 'Quoi', 'Quoi?', 'Quoi ?','Kwa','Kwa ?','kwa ?','kwa','QUOI ?','QUOI']
 mute_tracker = Hash.new(0) 
 mute_cooldown = {}  
+command_users = {}
+STARBOARD_FILE = 'starboard.json'
+uptime_start = Time.now
+command_usage = Hash.new(0)
+
 
 @insults = ["idiot", "stupid", "fool", "moron", "jerk","everyone","@everyone","@"]
 
@@ -169,7 +174,18 @@ def get_osu_user_recent_score(username, token)
   scores.empty? ? nil : scores.first
 end
 
-# Definition
+def load_starboard_settings
+  if File.exist?(STARBOARD_FILE)
+    JSON.parse(File.read(STARBOARD_FILE))
+  else
+    {}
+  end
+end
+
+def save_starboard_settings(settings)
+  File.write(STARBOARD_FILE, JSON.pretty_generate(settings))
+end
+# Miscellaneous helper methods
 def FEUR(event)
   id = event.user.id.to_s
   $global_user_feur[id] ||= 0
@@ -265,7 +281,7 @@ def fetch_ai_response(user_question, user_id = nil)
     "pdf_nombre_pages"   => "4",
     "xscreen"            => "1920",
     "yscreen"            => "1080",
-    "question"           => "#{intro} Maintenant, l'utilisateur à envoyé ça. Réponds comme si tu jouais un personnage avec les traits de caractères que je t'ai précédemment envoyé. Ta personnalité ne t'empêche pas de t'exprimer sur ta situation amoureuse, mais tu n'en parle que si on te la demande. Voici la requête de l'utilisateur : #{user_question}",
+    "question"           => "#{intro} Maintenant, l'utilisateur à envoyé ça. Réponds comme si tu jouais un personnage avec les traits de caractères que je t'ai précédemment envoyé. Ta personnalité ne t'empêche pas de t'exprimer sur ta situation amoureuse, mais tu n'en parle que si on te la demande. Tu dois être la plus synthétique possible, en 150 lettres grand maximum. Voici la requête de l'utilisateur : #{user_question}",
     "selected_engine"    => "",
     "o1-mini-status"     => "OFF",
     "affichage_markdown" => "NON"
@@ -296,7 +312,7 @@ def fetch_ai_response(user_question, user_id = nil)
   return nil if response_text.nil? || response_text.empty?
 
   if contains_insults_or_links?(response_text)
-    return "Je ne peux envoyer ce message car il contient des insultes, mentions ou des liens."
+    return "Je ne peux pas envoyer ce message car il contient des insultes ou des liens."
   end
 
   if user_id
@@ -390,30 +406,31 @@ icanmakeasentencebutidontthinkyoullenjoyit = {
 
 # Welcome
 WELCOME_GIFS = [
-  '[Yay !](https://media.discordapp.net/attachments/1322197461745406106/1339343837407088673/image0.gif?ex=67ae60a6&is=67ad0f26&hm=803dc4e377604549e22baaab0da08d6c5666386ff7e7fb12c253b4f511e32a3b&=)',
-  '[Super !](https://media.discordapp.net/attachments/1322197461745406106/1339343773141958736/image0.gif?ex=67ae6097&is=67ad0f17&hm=20bef1d20968555699ed8bb2d7f49b6e68e14a14e89834ed13dd61ea93327af9&=)',
-  '[Ouais !](https://media.discordapp.net/attachments/1322197461745406106/1339343734072147988/image0.gif?ex=67ae608e&is=67ad0f0e&hm=5ff13aab46eb142dad00503cbf37262f9f90370e977c95c107b5c145619abe87&=)',
-  '[Incroyable !](https://media.discordapp.net/attachments/1322197461745406106/1339343231858774140/image0.gif?ex=67ae6016&is=67ad0e96&hm=51f512dae3117e42fa80fd8fa1048c4f5a96c29ca12712df6bba956c3fecd92e&=)',
-  '[Hello !](https://media.discordapp.net/attachments/1175162543292026954/1339352990494097490/image0.gif?ex=67ae692c&is=67ad17ac&hm=3c7d6f2b4ec7451f16c1ada176a8978b5ed5e2570a6f8d9123fa4e06f4fd4fef&=)',
-  "[Viens t'amuser avec nous !](https://media.discordapp.net/attachments/1175162543292026954/1339352991076978888/image1.gif?ex=67ae692d&is=67ad17ad&hm=06c7e0d9fd642f505c302107b805359117147d09bffd4a2e1625e2b276f35c05&=)",
-  "[Salut !](https://media.discordapp.net/attachments/1175162543292026954/1339352999159402497/image2.gif?ex=67ae692e&is=67ad17ae&hm=b24ed244597093bfd0a9c5686dc3859359bb1c297a58ab240c90d728f153aeec&=)",
-  "[Rejoint nos rangs !](https://media.discordapp.net/attachments/1175162543292026954/1339353021888467038/image3.gif?ex=67ae6934&is=67ad17b4&hm=d90351a28236dda5798e9ca6bedcc4cb162cc395710841d750c4fb1fcbef5955&=)",
-  "[YATAAAAAAA](https://media.discordapp.net/attachments/1175162543292026954/1339353022643572816/image4.gif?ex=67ae6934&is=67ad17b4&hm=fa05f4cbb6aaa36b1b1052479d3675ab49b9fd82e7f15e51809eba4550639ec6&=)",
-  "[Let's dance !](https://media1.tenor.com/m/m21RwoBHceEAAAAd/koshi-torako-shikanoko.gif)",
-  "[Coucou !](https://media1.tenor.com/m/FVTnxZSP5DQAAAAC/shikanoko-nokonoko-koshitantan-anime-girl-wave.gif)",
-  "[Crazy de baisé comme disent les jeunes !](https://media1.tenor.com/m/y6V1TRkQHN4AAAAd/bocchi-the-rock-hitori-gotou.gif)",
-  "[My honest reaction :](https://media1.tenor.com/m/DzhA1SlFGDMAAAAC/bocchi-the-rock-bocchi.gif)",
-  "[Look and be amazed !](https://media1.tenor.com/m/yoVhEyAbAiwAAAAd/ikuyo-kita-bocchi-the-rock.gif)",
-  "[J'vais pouvoir encore plus yapper !](https://media.tenor.com/2mmVJ9z02kwAAAAi/kita-bocchi-the-rock.gif)",
-  "[LET'S GOOOOO](https://media1.tenor.com/m/_rjlygWYLgIAAAAC/kita-ikuyo-kita.gif)",
-  "[Eheh !](https://media1.tenor.com/m/IctVYl1OtVUAAAAC/kita-bocchi.gif)",
-  "[T'as fais le bon choix bro !](https://media1.tenor.com/m/--6HY8Fev9cAAAAd/oke-yamada-ryo.gif)",
-  "[Moi, Miyo, fait le serment que c'est une bonne personne !](https://media1.tenor.com/m/26Xx041y4rsAAAAC/ryo-yamada-me.gif)",
-  "[HIIIIIIIII !!!!](https://media1.tenor.com/m/YQOQEO9ETvIAAAAC/ryo-ryo-yamada.gif)",
-  "[Eh oui, j'te vois de loin !](https://media1.tenor.com/m/Y4_gsxaOcyQAAAAC/akame-ga-kill-kurome.gif)",
-  "[Un avenir radieux se présente à nous !](https://media1.tenor.com/m/KHVsC4toAWIAAAAC/excited-akamegakill.gif)",
-  "[Bienvenue !](https://media1.tenor.com/m/lSNZc8qSKoEAAAAC/chelsea-akame-ga-kill.gif)",
-  "[HEYOOOOO](https://media1.tenor.com/m/vNapCUP0d3oAAAAd/pjsk-pjsk-anime.gif)"
+  '[Yay !](https://tenor.com/nwjJy31nO7l.gif)',
+  '[Super !](https://tenor.com/bOOeL.gif)',
+  '[Ouais !](https://tenor.com/bpdyo.gif)',
+  '[Incroyable !](https://tenor.com/cDMkOM91zdc.gif)',
+  '[Hello !](https://media.giphy.com/media/f2eEmGGO6MaaG4hCHE/giphy.gif?cid=790b7611ktk51fecy8tq8g8wnh94ukxxpp50vz2gkp5w0qg2&ep=v1_gifs_search&rid=giphy.gif&ct=g)',
+  "[Viens t'amuser avec nous !](https://tenor.com/bm9Xa.gif)",
+  "[Salut !](https://tenor.com/bKY1N.gif)",
+  "[Rejoint nos rangs !](https://tenor.com/dGmXXLPxIB3.gif)",
+  "[YATAAAAAAA](https://tenor.com/lxOcXvTavpU.gif)",
+  "[Let's dance !](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjhpNHFzeGpkcTFjN3ZpYThhdnoweHNiZXNiZTl5cjFpY3loeWx3dCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/iwsFHeFMtn3nNxSdP8/giphy.gif)",
+  "[Coucou !](https://tenor.com/lPqSCzv1Vab.gif)",
+  "[Crazy de baisé comme disent les jeunes !](https://tenor.com/bYZb2.gif)",
+  "[My honest reaction :](https://tenor.com/qMaL64pTqow.gif)",
+  "[Look and be amazed !](https://tenor.com/tmkzH2Dmimx.gif)",
+  "[J'vais pouvoir encore plus yapper !](https://tenor.com/NL7v.gif)",
+  "[LET'S GOOOOO](https://tenor.com/b0xL6.gif)",
+  "[Eheh !](https://tenor.com/WJZSUfm6CT.gif)",
+  "[T'as fais le bon choix bro !](https://tenor.com/bTZnm.gif)",
+  "[Moi, Miyo, fait le serment que c'est une bonne personne !](https://tenor.com/bM6AVMfdZZi.gif)",
+  "[HIIIIIIIII !!!!](https://tenor.com/v12LabRG0zu.gif)",
+  "[Eh oui, j'te vois de loin !](https://tenor.com/iH74EEgzMvE.gif)",
+  "[Un avenir radieux se présente à nous !](https://tenor.com/mX1oju0QV2b.gif)",
+  "[Bienvenue !](https://tenor.com/iuy8xBOlRxS.gif)",
+  "[HEYOOOOO](https://tenor.com/bZZVI.gif)",
+  "[L'invitation a été prise en compte !](https://tenor.com/lwhjabJxnbu.gif)"
 ]
 
 WELCOME_MESSAGES = [
@@ -466,6 +483,23 @@ activities = [
   "Cookie Clicker, help me"
 ]
 
+COMMANDS = [
+  'help',
+  'info',
+  'talk',
+  'osulink',
+  'osuunlink',
+  'rs',
+  'osu',
+  'osurdm',
+  'kiss',
+  'hug',
+  'punch',
+  'trigger',
+  'welcome',
+  'stats'
+]
+
 # Greetings things
 cooldowns = {}
 COOLDOWN_TIME = 108000
@@ -478,10 +512,60 @@ greetings = {
   'hey'     => "Greetings! How are you today?"
 }
 
+banned_users = {
+  '1219737701096489010' => 'kaiserrlearabe', # gore + pornographie
+  '1014460761466224660' => 'sky100papier', # Harcèlements de femmes
+  '1167590562820538439' => 'blazz@r', # Harcèlement de femmes
+  '748256685209944166' => 'i want to khra zehef', # Harcèlement de femmes
+  '813850329032556564' => 'moha95120' # Pub pour cartes bancaires "pas cher"
+}
+
+
 ##############################
 # BOT EVENTS & COMMANDS
 ##############################
-# If blud wants to send porn link
+
+# Système de ban automatique lors de l'envoie d'un message d'un utilisateur ayant causé des problème et ayant été report sur d'autres serveur. Feel free to use it.
+bot.message do |event|
+  if banned_users.key?(event.user.id)
+    event.message.delete
+    event.user.ban rescue nil
+  end
+end
+
+
+bot.command(:banuseradd) do |event, user_id|
+  break unless event.user.id == MY_USER_ID 
+
+  user = event.server.member(user_id.to_i)
+  if user
+    banned_users[user.id] = user.username
+    event.respond "**#{user.username}** (`#{user.id}`) a été ajouté à la liste des bannis."
+  else
+    event.respond "Impossible de trouver cet utilisateur."
+  end
+end
+
+
+bot.command(:banuserremove) do |event, user_id|
+  break unless event.user.id == MY_USER_ID  
+
+  if banned_users.delete(user_id.to_i)
+    event.respond "L'utilisateur `#{user_id}` a été retiré de la liste des bannis."
+  else
+    event.respond "Cet utilisateur n'est pas banni."
+  end
+end
+
+bot.command(:banuserlist) do |event|
+  if banned_users.empty?
+    event.respond "📜 La liste des bannis est vide."
+  else
+    list = banned_users.map { |id, username| "**#{username}** (`#{id}`)" }.join("\n")
+    event.respond "📜 **Liste des utilisateurs bannis :**\n#{list}"
+  end
+end
+
 bot.message do |event|
   next unless event.server 
 
@@ -515,22 +599,6 @@ bot.message do |event|
   end
 end
 
-
-# New member
-bot.member_join do |event|
-  general_channel = event.server.text_channels.find { |c| c.name.downcase.include?("general") }
-  public_channel = event.server.text_channels.find { |c| c.name.downcase.include?("public") }
-  if general_channel || public_channel
-    sleep(5)   
-    mention = "<@#{event.user.id}>"
-    welcome_text = WELCOME_MESSAGES.sample.gsub("{user}", mention)
-                                          .gsub("{server}", event.server.name)
-    gif = WELCOME_GIFS.sample
-    allowed = Discordrb::AllowedMentions.new(users: [event.user.id])
-    general_channel.send_message("#{welcome_text}\n#{gif}", false, nil, nil, allowed)
-  end
-end
-
 #Categories Random Sentences
 bot.command :toggle_category do |event, category|
   server_id = event.server.id
@@ -554,6 +622,8 @@ bot.command :toggle_category do |event, category|
       end
       server_categories[server_id] = enabled_categories
       save_enabled_categories(server_categories)
+
+      # Debug output
       puts "Enabled categories for server #{server_id}: #{enabled_categories.inspect}"
     else
       event.respond "Category #{category} not found."
@@ -863,10 +933,6 @@ bot.message do |event|
   end
 end
 
-
-
-
-# French 
 bot.message do |event|
   if event.content.downcase.include?('ça va et toi') || event.content.downcase.include?('bien et toi')
     case humeur()
@@ -879,7 +945,20 @@ bot.message do |event|
   end
 end
 
-# English 
+# French (needs to be in the same with english and ask english or french)
+bot.message do |event|
+  if event.content.downcase.include?('ça va et toi') || event.content.downcase.include?('bien et toi')
+    case humeur()
+    when 1 then bot.send_message(event.channel.id, "Je vais bien également !")
+    when 2 then bot.send_message(event.channel.id, "Je me sens bien aujourd'hui aussi")
+    when 3 then bot.send_message(event.channel.id, "Ça va ça va, la journée se passe tranquillement")
+    when 4 then bot.send_message(event.channel.id, "Ça va ! Un peu calme aujourd'hui mais ça se passe !")
+    else bot.send_message(event.channel.id, "Something went wrong. Please try again.")
+    end
+  end
+end
+
+# English (needs to be in the same with french and ask english or french)
 bot.message do |event|
   if event.content.downcase.include?('good and you') || event.content.downcase.include?('fine and you')
     case humeur()
@@ -890,6 +969,31 @@ bot.message do |event|
     else bot.send_message(event.channel.id, "Something went wrong. Please try again.")
     end
   end
+end
+
+bot.message(start_with: '!museau') do |event|
+  event.message.delete
+
+  lat = rand(-90.0..90.0).round(6)
+  lng = rand(-180.0..180.0).round(6)
+
+  google_map_link = "https://www.google.com/maps?q=#{lat},#{lng}"
+
+  # Mise à jour de l'URL de prévisualisation avec le paramètre "red-pushpin"
+  preview_url = "https://staticmap.openstreetmap.de/staticmap.php?center=#{lat},#{lng}&zoom=15&size=600x300&markers=#{lat},#{lng},red-pushpin"
+
+  embed = Discordrb::Webhooks::Embed.new(
+    title: "Une commande secrète a été trouvée !",
+    description: "Voici où est actuellement Museau. Bien que je ne puisse décrire exactement l'endroit, il se trouve sûrement dans une contrée éloignée pour se ressourcer.",
+    url: google_map_link,
+    color: 0x3498db,
+    timestamp: Time.now
+  )
+  
+  embed.add_field(name: "Coordonnées", value: "#{lat}, #{lng}", inline: true)
+  embed.image = Discordrb::Webhooks::EmbedImage.new(url: preview_url)
+  
+  event.respond('', false, embed)
 end
 
 #keywords
@@ -990,7 +1094,7 @@ end
 bot.command :help do |event|
   event.channel.send_embed do |embed|
     embed.title = "Mes salutations !"
-    embed.description = "Je me prénomme Miyo, à votre service.\nJe dispose de quelques commandes que vous pourrez utiliser tout du long de mon histoire sur ce serveur. \n### Fun\n- !talk : vous donne une phrase aléatoire parmi tous les mots et personnes que je connais \n### Osu\n- !osulink : permet de lier votre nom de compte osu avec votre id sur discord. Facilite l'utilisation de la commande '!rs' et 'osu'\n- !osuunlink : permet permet de délier votre nom de compte osu avec votre id sur discord.\n- !rs : permet de voir le score le plus récent d'un joueur osu.\n- !osu : permet de voir le score le plus récent d'un joueur osu.\n- !osurdm : permet de trouver une beatmap adaptée à votre demande.\n### Interactions\n- !kiss : vous permet d'embrasser quelqu'un... Quelle commande futile.\n- !hug : vous permet de câliner quelqu'un... Enfin, si vous avez quelqu'un à câliner.\n- !punch : vous permet de frapper quelqu'un. Veuillez l'utiliser à tout moment, les affrontement de personnes inférieurs à la noblesse est tellement divertissant.\n- !trigger : afin d'exprimer votre colère.\n\nÉgalement, je réagis à certains mots, il faudra que vous discutiez pour tous les connaîtres. Si vous me le permettez, ma présentation se termine ici, et j'espère qu'elle saura vous convaincre. Si vous souhaitez me solliciter, mentionnez-moi, je me ferais une (fausse) joie de vous répondre."
+    embed.description = "Je me prénomme Miyo, à votre service.\nJe dispose de quelques commandes que vous pourrez utiliser tout du long de mon histoire sur ce serveur. \n### Fun\n- !talk : vous donne une phrase aléatoire parmi tous les mots et personnes que je connais \n### Osu\n- !osulink : permet de lier votre nom de compte osu avec votre id sur discord. Facilite l'utilisation de la commande '!rs' et 'osu'\n- !osuunlink : permet permet de délier votre nom de compte osu avec votre id sur discord.\n- !rs : permet de voir le score le plus récent d'un joueur osu.\n- !osu : permet de voir le score le plus récent d'un joueur osu.\n- !osurdm : permet de trouver une beatmap adaptée à votre demande.\n### Interactions\n- !kiss : vous permet d'embrasser quelqu'un... Quelle commande futile.\n- !hug : vous permet de câliner quelqu'un... Enfin, si vous avez quelqu'un à câliner.\n- !punch : vous permet de frapper quelqu'un. Veuillez l'utiliser à tout moment, les affrontement de personnes inférieurs à la noblesse est tellement divertissant.\n- !trigger : afin d'exprimer votre colère.\n### Commandes modérateur\n- !welcome : vous permet de configurer un système de bienvenue sur votre serveur.\n\nÉgalement, je réagis à certains mots, il faudra que vous discutiez pour tous les connaîtres. Si vous me le permettez, ma présentation se termine ici, et j'espère qu'elle saura vous convaincre. Si vous souhaitez me solliciter, mentionnez-moi, je me ferais une (fausse) joie de vous répondre."
     embed.color = 0x3498db
     embed.timestamp = Time.now
 
@@ -1091,7 +1195,6 @@ bot.message do |event|
     end
   end
 end
-
  #other interact command (yay)
 bot.message do |event|
   if event.content.downcase.include?('maman')
@@ -1319,8 +1422,154 @@ bot.command :osuunlink do |event|
   end
 end
 
+bot.message do |event|
+  if event.message.content == '!welcome'
+    is_admin = event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
+    unless is_admin
+      event.respond "Vous n'avez pas la permission d'utiliser cette commande."
+      next
+    end
+
+    command_users[event.user.id] = Time.now
+
+    event.channel.send_embed do |embed|
+      embed.title = "Système de bienvenue !"
+      embed.description = "Vous prévoyez d'accueillir de nouvelles personnes ? Voici ce que je peux faire :\n\n- Activer ou désactiver le système de bienvenue\n- Modifier le salon d'envoi du message de bienvenue\n\nDépêchez vous, je n'ai guère votre temps."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+    end
+
+    menu_message = event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.string_select(custom_id: 'string_select', placeholder: 'Choisissez une option', max_values: 1) do |ss|
+            ss.option(label: 'Activer/Désactiver le système', value: '1', emoji: { name: '1️⃣' })
+            ss.option(label: "Modifier le salon d'envoi", value: '2', emoji: { name: '2️⃣' })
+          end
+        end
+      end
+    )
+
+    Thread.new do
+      sleep 30
+      if Time.now - command_users[event.user.id] >= 30
+        menu_message.delete
+        command_users.delete(event.user.id)
+      end
+    end
+  end
+end
+
+bot.string_select do |event|
+  if command_users[event.user.id].nil?
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  command_users[event.user.id] = Time.now
+
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  welcome_settings = server_settings['welcome_system'] || {}
+
+  case event.values.first
+  when '1'
+    welcome_settings['active'] = !welcome_settings.fetch('active', false)
+    event.interaction.respond(content: "Le système de bienvenue est maintenant #{welcome_settings['active'] ? 'activé' : 'désactivé'}.", ephemeral: true)
+  when '2'
+    event.interaction.respond(content: "Veuillez sélectionner le salon pour les messages de bienvenue.", ephemeral: true)
+    event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.channel_select(custom_id: 'channel_select', placeholder: 'Sélectionnez le salon', max_values: 1)
+        end
+      end
+    )
+  end
+
+  server_settings['welcome_system'] = welcome_settings
+  settings[event.server.id.to_s] = server_settings
+  save_starboard_settings(settings)
+end
+
+bot.channel_select do |event|
+  if command_users[event.user.id].nil?
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  command_users[event.user.id] = Time.now
+
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  welcome_settings = server_settings['welcome_system'] || {}
+
+  welcome_settings['welcome_channel_id'] = event.values.first.id
+  event.interaction.respond(content: "Le salon de bienvenue est maintenant <##{event.values.first.id}>.", ephemeral: true)
+
+  server_settings['welcome_system'] = welcome_settings
+  settings[event.server.id.to_s] = server_settings
+  save_starboard_settings(settings)
+end
+
+bot.member_join do |event|
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  welcome_settings = server_settings['welcome_system'] || {}
+  next unless welcome_settings['active']
+
+  target_channel = event.server.text_channels.find { |c| c.id == welcome_settings['welcome_channel_id'] }
+
+  if target_channel
+    sleep 5
+    mention = "<@#{event.user.id}>"
+    welcome_text = WELCOME_MESSAGES.sample.gsub("{user}", mention).gsub("{server}", event.server.name)
+    gif = WELCOME_GIFS.sample
+    allowed = Discordrb::AllowedMentions.new(users: [event.user.id])
+    target_channel.send_message("#{welcome_text}\n#{gif}", false, nil, nil, allowed)
+  end
+end
+
+bot.message do |event|
+  content = event.message.content
+  if content.start_with?(PREFIX)
+    next if content == "#{PREFIX}stats"
+    command_word = content[PREFIX.length..-1].split.first
+    if COMMANDS.include?(command_word)
+      command_usage[command_word] += 1
+    end
+  end
+  nil
+end
+
+bot.command :stats do |event|
+  unless event.user.id == MY_USER_ID
+    event.respond "Tu n'as pas la permission d'utiliser cette commande."
+    next
+  end
+  command_usage['stats'] += 1
+  stats = COMMANDS.map { |cmd| "`#{PREFIX}#{cmd}` : used #{command_usage[cmd]} times" }.join("\n\n")
+  event.respond "**Stats actuelles :**\n#{stats}"
+end
+
 
 #OUAIIIIS LE BOT IL EST ENCORE VIVANT YOUHOU
+Signal.trap('INT') do
+  bot.stop
+end
+
+Signal.trap('TERM') do
+  bot.stop
+end
+
 bot.ready do
   puts 'Le bot est en ligne !'
 
@@ -1354,8 +1603,22 @@ bot.ready do
   end
 end
 
-
-
-
 bot.run
 
+uptime_end = Time.now
+filename = "#{uptime_end.strftime('%Y-%m-%d_%H-%M-%S')}.txt"
+logs_dir = 'logs'
+FileUtils.mkdir_p(logs_dir)
+
+filepath = File.join(logs_dir, filename)
+File.open(filepath, "w") do |file|
+  file.puts "#{uptime_start.strftime('%d/%m/%Y %H:%M:%S')} to #{uptime_end.strftime('%d/%m/%Y %H:%M:%S')}"
+  file.puts
+
+  COMMANDS.each do |cmd|
+    file.puts "#{PREFIX}#{cmd} : used #{command_usage[cmd]} times"
+    file.puts
+  end
+end
+
+puts "\nBot stats saved to #{filepath}. Bye!"
