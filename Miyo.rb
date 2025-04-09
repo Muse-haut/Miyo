@@ -38,7 +38,7 @@ command_users = {}
 STARBOARD_FILE = 'starboard.json'
 uptime_start = Time.now
 command_usage = Hash.new(0)
-
+BANNED_USERS_FILE = 'banned_users.json'
 
 @insults = ["idiot", "stupid", "fool", "moron", "jerk","everyone","@everyone","@"]
 
@@ -175,16 +175,27 @@ def get_osu_user_recent_score(username, token)
 end
 
 def load_starboard_settings
-  if File.exist?(STARBOARD_FILE)
-    JSON.parse(File.read(STARBOARD_FILE))
-  else
-    {}
+  unless File.exist?(STARBOARD_FILE)
+    File.write(STARBOARD_FILE, "{}")
   end
+  JSON.parse(File.read(STARBOARD_FILE))
 end
 
 def save_starboard_settings(settings)
   File.write(STARBOARD_FILE, JSON.pretty_generate(settings))
 end
+
+def load_banned_users
+  unless File.exist?(BANNED_USERS_FILE)
+    File.write(BANNED_USERS_FILE, "{}")
+  end
+  JSON.parse(File.read(BANNED_USERS_FILE))
+end
+
+def save_banned_users(banned)
+  File.write(BANNED_USERS_FILE, JSON.pretty_generate(banned))
+end
+
 # Miscellaneous helper methods
 def FEUR(event)
   id = event.user.id.to_s
@@ -261,6 +272,8 @@ def fetch_ai_response(user_question, user_id = nil)
     intro = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers moi, <@935207909183356951>, appelé Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? L'utilisateur ayant demandé ta grandeur est Museau, en d'autre terme, ton créateur."
   elsif user_id.to_i == 934971149580898364
     intro = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers <@935207909183356951>, appelé Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? Bien entendu, la personne qui vas te demander quelques chose n'est pas Museau, remet-lui gentilment les pendules à l'heure si la personne tente de se faire passer pour Museau. Agis comme si tu étais en couple avec <@934971149580898364>, aussi connu sous le nom de Slomaki. L'utilisateur ayant demandé ta grandeur est <@934971149580898364>, Slomaki en d'autres termes, ton amant, et tu n'hésite pas à le dire, car tu en es plutôt fière, mais aussi, tu n'hésite pas à faire des blagues sur lui et à le charrier, et te montre froide car oui, tu es la personne dominante dans ce couple. Si cet utilisateur ne dit rien excepté ton nom, fais comme si tu vivais ta vie de couple avec lui(tout en restant dominante, mais sans insulte bien sûr)"
+  elsif user_id.to_i == 1359531381658484837
+    return
   else
     intro = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers <@935207909183356951>, appelé Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? Bien entendu, la personne qui vas te demander quelques chose n'est pas Museau, remet-lui gentilment les pendules à l'heure si la personne tente de se faire passer pour Museau. Si l'utilisateur te demande d'être en couple, que tu es sa femme ou quoi qu'est-ce relié à ta situation amoureuse, agis comme si tu étais en couple avec @934971149580898364, aussi appelé Slomaki, et tu n'hésite pas à le dire, car tu en es plutôt fière. L'utilisateur ayant demandé ta grandeur est @#{user_id}."
   end
@@ -362,6 +375,50 @@ end
 
 $feedback = load_feedback
 $last_combo = nil
+starboard_settings = load_starboard_settings
+
+def check_banned_users(bot)
+  local_starboard_settings = load_starboard_settings  # Recharge les paramètres
+  banned_users = load_banned_users
+  bot.servers.each do |_server_id, server|
+    # On récupère les IDs des membres présents pour éviter les appels sur des membres inexistants
+    member_ids = server.members.map(&:id)
+    banned_users.each do |user_id, _|
+      user_id_int = user_id.to_i
+      next unless member_ids.include?(user_id_int)
+      begin
+        member = server.member(user_id_int) rescue nil
+        next unless member
+        banned_ids = server.bans.map { |ban| ban.user.id }
+        unless banned_ids.include?(member.id)
+          server.ban(member, reason: "Bannissement automatique basé sur la liste des bannis.")
+          puts "Membre #{member.distinct} banni automatiquement dans le serveur #{server.name}."
+
+          # Envoi d'un message dans le salon de log via bot.channel
+          log_channel_id = local_starboard_settings[server.id.to_s] && local_starboard_settings[server.id.to_s]["log_channel_id"]
+          if log_channel_id
+            log_channel = bot.channel(log_channel_id)
+            if log_channel && log_channel.server.id == server.id && log_channel.type == 0
+              log_channel.send_message("🚫 **#{member.distinct}** a été banni automatiquement.\n> **Raison** : Bannissement automatique basé sur la liste des bannis.")
+            else
+              puts "Salon de log non trouvé dans le serveur #{server.name} pour l'ID #{log_channel_id}."
+            end
+          end
+        end
+      rescue StandardError => e
+        puts "Erreur lors de la vérification des bannis dans #{server.name} pour l'utilisateur #{user_id} : #{e.message}"
+      end
+    end
+  end
+end
+
+def autoban_enabled?(server_id, settings)
+  settings.dig(server_id, "autoban_enabled") == true
+end
+
+def is_moderator_or_owner?(event)
+  event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
+end
 ##############################
 # DATA STRUCTURES & SETTINGS
 ##############################
@@ -525,44 +582,189 @@ banned_users = {
 # BOT EVENTS & COMMANDS
 ##############################
 
-# Système de ban automatique lors de l'envoie d'un message d'un utilisateur ayant causé des problème et ayant été report sur d'autres serveur. Feel free to use it.
-bot.message do |event|
-  if banned_users.key?(event.user.id)
-    event.message.delete
-    event.user.ban rescue nil
+# Système de ban automatique. Feel free to use it or not. You can activate and desactivate it.
+
+bot.command(:banuseradd) do |event, *args|
+  break unless event.user.id == MY_USER_ID
+
+  if args.empty?
+    event.respond "❌ Utilisation : `!banuseradd <user_id> [raison...]`"
+    next
   end
-end
 
+  banned_users = load_banned_users
+  user_id = args.shift.to_i
+  reason = args.join(" ").strip
+  user_id_str = user_id.to_s
 
-bot.command(:banuseradd) do |event, user_id|
-  break unless event.user.id == MY_USER_ID 
+  if user_id == 0
+    event.respond "❌ ID invalide."
+    next
+  end
 
-  user = event.server.member(user_id.to_i)
-  if user
-    banned_users[user.id] = user.username
-    event.respond "**#{user.username}** (`#{user.id}`) a été ajouté à la liste des bannis."
+  user = event.server.member(user_id) rescue nil
+
+  username = if user
+    "#{user.username}##{user.discriminator}"
+  elsif banned_users[user_id_str]
+    banned_users[user_id_str]["tag"]
   else
-    event.respond "Impossible de trouver cet utilisateur."
+    event.respond "ℹ️ Le pseudo de l’utilisateur est inconnu. Veuillez le saisir manuellement (ex : `Pseudo#1234`) :"
+    response = event.user.await!(timeout: 30)
+    if response
+      response.message.content.strip
+    else
+      event.respond "⏱️ Temps écoulé. Annulation de l’ajout."
+      next
+    end
+  end
+
+  banned_users[user_id_str] = {
+    "tag" => username,
+    "reason" => reason.empty? ? "Non précisé" : reason
+  }
+
+  save_banned_users(banned_users)
+  event.respond "✅ **#{username}** (`#{user_id}`) a été ajouté à la liste des bannis.\n📄 Raison : *#{banned_users[user_id_str]['reason']}*"
+
+  if event.server.member(user_id)
+    begin
+      event.server.ban(user, reason: "Ajout à la liste des bannis : #{reason}")
+    rescue StandardError
+      puts "Impossible de bannir #{user.username}"
+    end
   end
 end
+
 
 
 bot.command(:banuserremove) do |event, user_id|
-  break unless event.user.id == MY_USER_ID  
+  break unless event.user.id == MY_USER_ID
 
-  if banned_users.delete(user_id.to_i)
-    event.respond "L'utilisateur `#{user_id}` a été retiré de la liste des bannis."
+  banned_users = load_banned_users
+  user_id_str = user_id.to_s
+
+  if banned_users.delete(user_id_str)
+    save_banned_users(banned_users)
+    event.respond "✅ Utilisateur `#{user_id}` retiré de la liste des bannis."
   else
-    event.respond "Cet utilisateur n'est pas banni."
+    event.respond "⚠️ Cet utilisateur n’est pas dans la liste."
   end
 end
 
 bot.command(:banuserlist) do |event|
+  break unless event.user.id == MY_USER_ID
+
+  banned_users = load_banned_users
+
   if banned_users.empty?
     event.respond "📜 La liste des bannis est vide."
   else
-    list = banned_users.map { |id, username| "**#{username}** (`#{id}`)" }.join("\n")
-    event.respond "📜 **Liste des utilisateurs bannis :**\n#{list}"
+    list = banned_users.each_with_index.map do |(id, info), index|
+      "**#{index + 1}.** `#{id}` • **#{info['tag']}**\n> 🚫 *#{info['reason']}*"
+    end.join("\n")
+
+    event.respond(list.length < 2000 ? list : "⚠️ Trop de bannis pour être affichés dans un seul message (#{list.length} caractères).")
+  end
+end
+
+
+
+bot.command(:autoban) do |event, subcmd, arg|
+  break unless is_moderator_or_owner?(event)
+
+  server_id = event.server.id.to_s
+  starboard_settings = load_starboard_settings
+  starboard_settings[server_id] ||= {}
+
+  case subcmd
+  when "on"
+    starboard_settings[server_id]["autoban_enabled"] = true
+    save_starboard_settings(starboard_settings)
+    event.channel.send_embed do |embed|
+      embed.title = "Système d'auto bannissement"
+      embed.description = "Le système d'auto bannissement est désormais actif sur ce serveur. Je ne tolérerai aucun bélître qui s'est déjà fait remarqué...\n\n\n"
+      embed.color = 0x3498db 
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+  
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signé,\nMiyo.",
+      )
+
+      embed.add_field(name: "Si vous souhaitez contribuer au système d'autoban, en ajoutant quelqu'un par exemple, veuillez en parler ici (preuves à l'appuie demandée)", value: "[Museau's World](https://discord.gg/SeJr7ANamW)", inline: true)
+      embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
+  when "off"
+    starboard_settings[server_id]["autoban_enabled"] = false
+    save_starboard_settings(starboard_settings)
+    event.channel.send_embed do |embed|
+      embed.title = "Système d'auto bannissement"
+      embed.description = "Le système d'auto bannissement est désormais inactif sur ce serveur. Une période de relâchement je présume...\n\n\n"
+      embed.color = 0x3498db 
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+  
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signé,\nMiyo.",
+      )
+
+      embed.add_field(name: "Si vous souhaitez contribuer au système d'autoban, en ajoutant quelqu'un par exemple, veuillez en parler ici (preuves à l'appuie demandée)", value: "[Museau's World](https://discord.gg/SeJr7ANamW)", inline: true)
+      embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
+  when "setchannel"
+    if arg.nil? || !arg.match?(/^<#?(\d+)>$/)
+      event.respond "Afin de bien paramètrer ce système, je vous invite à faire la même commande dans ces formats : \n`!autoban setchannel #salon` ou `!autoban setchannel salon_id`"
+      next
+    end
+
+    channel_id = arg.match(/^<#?(\d+)>$/)[1].to_i
+    begin
+      channel = bot.channel(channel_id)
+    rescue => e
+      channel = nil
+    end
+
+    if channel && channel.server.id == event.server.id
+      starboard_settings[server_id]["log_channel_id"] = channel.id
+      save_starboard_settings(starboard_settings)
+      event.respond "Le salon où seront posté les messages d'auto ban seront désormais dans le salon #{channel.mention}"
+    else
+      starboard_settings[server_id]["log_channel_id"] = channel_id
+      save_starboard_settings(starboard_settings)
+      event.respond "J'ai remué ciel terre et mer, mais je n'ai pas trouvé votre salon. Toutefois, j'ai quand même sauvegardé l'id du salon, qui n'est autre que **#{channel_id}**. Ma prestance ne pouvant y accèder, je vous demanderais de vérifier les permissions que vous m'avez donné, et les permissions de ce fameux salon."
+    end
+  else
+    status = autoban_enabled?(server_id, starboard_settings) ? "activé" : "désactivé"
+    event.channel.send_embed do |embed|
+      embed.title = "Système d'auto bannissement"
+      embed.description = "Le système d'auto bannissement est actuellement **#{status}** sur ce serveur.\n Ce système vous permet de bannir automatiquement des personnes qui ont été perçus comme peu recommandable sur d'autres serveurs dès qu'ils rejoignent,\nou après une petite periode de temps. Ce système n'est pas parfait, il n'empêche pas et n'empêchera jamais quelqu'un d'envoyer un contenus plus que limite, contraire à l'éthique, vos règles ou les conditions d'utilisations discord, et n'empêche en aucun cas un second compte d'être créé par un utilisateur. \nÉgalement,il faut que l'utilisateur apparaisse dans la liste, ce qui doit faire l'objet d'un ticket sur notre serveur (disponible un peu plus en bas).\nLe but est de maximiser les chances à de petites communautés de grandir sereinement, et au plus grande de purger les personnes susceptibles de causer des problèmes.\nVoici les options\n\n- Activer ou désactiver ce système avec `!autoban on` ou `autoban off`\n- Activer le pourquoi du comment la personne a été bannis dans un salon (désactivé même lorsque vous activer le système). Il s'active avec la commande `!autoban setchannel {nom ou id du salon}`\n\nBien, j'en eu trop dis. Je vous laisse donc le choix. Mais dépêchez, je n'ai guère plus de temps à vous accorder."
+      embed.color = 0x3498db 
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+  
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signé,\nMiyo.",
+      )
+
+      embed.add_field(name: "Si vous souhaitez contribuer au système d'autoban, en ajoutant quelqu'un par exemple, veuillez en parler ici (preuves à l'appuie demandée)", value: "[Museau's World](https://discord.gg/SeJr7ANamW)", inline: true)
+      embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
   end
 end
 
@@ -1094,7 +1296,7 @@ end
 bot.command :help do |event|
   event.channel.send_embed do |embed|
     embed.title = "Mes salutations !"
-    embed.description = "Je me prénomme Miyo, à votre service.\nJe dispose de quelques commandes que vous pourrez utiliser tout du long de mon histoire sur ce serveur. \n### Fun\n- !talk : vous donne une phrase aléatoire parmi tous les mots et personnes que je connais \n### Osu\n- !osulink : permet de lier votre nom de compte osu avec votre id sur discord. Facilite l'utilisation de la commande '!rs' et 'osu'\n- !osuunlink : permet permet de délier votre nom de compte osu avec votre id sur discord.\n- !rs : permet de voir le score le plus récent d'un joueur osu.\n- !osu : permet de voir le score le plus récent d'un joueur osu.\n- !osurdm : permet de trouver une beatmap adaptée à votre demande.\n### Interactions\n- !kiss : vous permet d'embrasser quelqu'un... Quelle commande futile.\n- !hug : vous permet de câliner quelqu'un... Enfin, si vous avez quelqu'un à câliner.\n- !punch : vous permet de frapper quelqu'un. Veuillez l'utiliser à tout moment, les affrontement de personnes inférieurs à la noblesse est tellement divertissant.\n- !trigger : afin d'exprimer votre colère.\n### Commandes modérateur\n- !welcome : vous permet de configurer un système de bienvenue sur votre serveur.\n\nÉgalement, je réagis à certains mots, il faudra que vous discutiez pour tous les connaîtres. Si vous me le permettez, ma présentation se termine ici, et j'espère qu'elle saura vous convaincre. Si vous souhaitez me solliciter, mentionnez-moi, je me ferais une (fausse) joie de vous répondre."
+    embed.description = "Je me prénomme Miyo, à votre service.\nJe dispose de quelques commandes que vous pourrez utiliser tout du long de mon histoire sur ce serveur. \n### Fun\n- !talk : vous donne une phrase aléatoire parmi tous les mots et personnes que je connais \n### Osu\n- !osulink : permet de lier votre nom de compte osu avec votre id sur discord. Facilite l'utilisation de la commande '!rs' et 'osu'\n- !osuunlink : permet permet de délier votre nom de compte osu avec votre id sur discord.\n- !rs : permet de voir le score le plus récent d'un joueur osu.\n- !osu : permet de voir le score le plus récent d'un joueur osu.\n- !osurdm : permet de trouver une beatmap adaptée à votre demande.\n### Interactions\n- !kiss : vous permet d'embrasser quelqu'un... Quelle commande futile.\n- !hug : vous permet de câliner quelqu'un... Enfin, si vous avez quelqu'un à câliner.\n- !punch : vous permet de frapper quelqu'un. Veuillez l'utiliser à tout moment, les affrontement de personnes inférieurs à la noblesse est tellement divertissant.\n- !trigger : afin d'exprimer votre colère.\n### Commandes modérateur\n- !welcome : vous permet de configurer un système de bienvenue sur votre serveur.\n- !autoban : vous permet de configurer un système d'autoban (plus d'informations en faisant la commande)\n\nÉgalement, je réagis à certains mots, il faudra que vous discutiez pour tous les connaîtres. Si vous me le permettez, ma présentation se termine ici, et j'espère qu'elle saura vous convaincre. Si vous souhaitez me solliciter, mentionnez-moi, je me ferais une (fausse) joie de vous répondre."
     embed.color = 0x3498db
     embed.timestamp = Time.now
 
@@ -1521,22 +1723,55 @@ bot.channel_select do |event|
 end
 
 bot.member_join do |event|
-  settings = load_starboard_settings
-  server_settings = settings[event.server.id.to_s] || {}
-  welcome_settings = server_settings['welcome_system'] || {}
-  next unless welcome_settings['active']
+  # Récupération de la liste des utilisateurs bannis
+  banned_users = load_banned_users
+  user_id_str = event.user.id.to_s
 
-  target_channel = event.server.text_channels.find { |c| c.id == welcome_settings['welcome_channel_id'] }
-
-  if target_channel
-    sleep 5
-    mention = "<@#{event.user.id}>"
-    welcome_text = WELCOME_MESSAGES.sample.gsub("{user}", mention).gsub("{server}", event.server.name)
-    gif = WELCOME_GIFS.sample
-    allowed = Discordrb::AllowedMentions.new(users: [event.user.id])
-    target_channel.send_message("#{welcome_text}\n#{gif}", false, nil, nil, allowed)
+  if banned_users.key?(user_id_str)
+    # --- Partie Bannissement Automatique ---
+    user = event.user
+    reason = banned_users[user_id_str]['reason'] || 'Aucune raison précisée'
+    
+    begin
+      event.server.ban(user, reason: "Autoban : inscrit dans la liste noire - Raison: #{reason}")
+      puts "Utilisateur #{user.distinct} banni automatiquement à l’arrivée dans #{event.server.name}."
+  
+      # Envoi du message de log dans le salon configuré
+      starboard_settings = load_starboard_settings
+      log_channel_id = starboard_settings[event.server.id.to_s] && starboard_settings[event.server.id.to_s]["log_channel_id"]
+      
+      if log_channel_id
+        # On utilise bot.channel pour être certain d'avoir le salon dans le cache global
+        log_channel = bot.channel(log_channel_id)
+        if log_channel && log_channel.server.id == event.server.id && log_channel.type == 0
+          log_channel.send_message("🚫 **#{user.distinct}** a été banni automatiquement à l’arrivée.\n> **Raison** : #{reason}")
+        else
+          puts "Salon de log non trouvé pour le serveur #{event.server.name} (ID: #{log_channel_id})."
+        end
+      end
+    rescue StandardError => e
+      puts "Erreur lors du bannissement automatique : #{e.message}"
+    end
+  else
+    # --- Partie Système de Bienvenue ---
+    settings = load_starboard_settings
+    server_settings = settings[event.server.id.to_s] || {}
+    welcome_settings = server_settings['welcome_system'] || {}
+    if welcome_settings['active']
+      target_channel = event.server.text_channels.find { |c| c.id == welcome_settings['welcome_channel_id'] }
+      if target_channel
+        sleep 5
+        mention = "<@#{event.user.id}>"
+        # On sélectionne aléatoirement un message et un GIF de bienvenue
+        welcome_text = WELCOME_MESSAGES.sample.gsub("{user}", mention).gsub("{server}", event.server.name)
+        gif = WELCOME_GIFS.sample
+        allowed = Discordrb::AllowedMentions.new(users: [event.user.id])
+        target_channel.send_message("#{welcome_text}\n#{gif}", false, nil, nil, allowed)
+      end
+    end
   end
 end
+
 
 bot.message do |event|
   content = event.message.content
@@ -1584,7 +1819,12 @@ bot.ready do
     end
   end
 
-
+  Thread.new do
+    loop do
+      check_banned_users(bot)
+      sleep 30
+    end
+  end
   load_enabled_categories
 
 
