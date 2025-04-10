@@ -86,3 +86,7 @@ Please report any bugs or issues to **museau__**.
 
 ## Acknowledgements 
 To Cyn, for helping me with some parts of the code!
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Muse-haut/Miyo&type=Date)](https://www.star-history.com/#Muse-haut/Miyo&Date)
