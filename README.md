@@ -37,10 +37,6 @@ We decline all responsibility for non-compliance with these rules. Sanctions may
 ## ⚙ 3 - Features  
 Miyo is primarily a **chatbot**, with several additional features.  
 
-### 📌 Prerequisites  
-To ensure proper operation, please include:  
-- **MuseaudeBot#2082** (optional)  
-
 ### 📝 Main Orders  
 - ‘hug’: Give someone a hug  
 - ‘punch’: Hit someone  
@@ -54,7 +50,7 @@ To ensure proper operation, please include:
 - ‘osurdm’: Get a random beatmap by difficulty  
 
 ### 🎲 Miscellaneous  
-- ‘dice’: Roll a die (1-6)  
+- ‘dice’: Roll a dice (1-6)  
 - ‘talk’: Generate a random phrase  
 
 ### 🛠️​ Moderator Commands
