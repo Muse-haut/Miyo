@@ -9,8 +9,8 @@ You can use this bot how you want, but please credit me.
 The following are comments about the use of my bot (not yours with this code), the regulations of my bot, but also its features. If you download and host your own bot using my code, this readme will not regulate your bot, leaving you with complete freedom.
 
 - **Bot** : Miyo#1437  
-- **Créateur/Creator** : museau__  
-- **Nous/Us** : Équipe travaillant sur le projet/The team behind the project
+- **Creator** : museau__  
+- **Us** : Équipe travaillant sur le projet/The team behind the project
 
 ⚠️ This bot isn't finished yet, he's in constant evolution and update quite often
 
@@ -48,7 +48,7 @@ To ensure proper operation, please include:
 - ‘trigger’: Show dissatisfaction  
 
 ### 🎮 Orders for *osu! *  
-- ‘osulink’: Link your Discord account to *osu! *  
+- ‘osulink’: Link your Discord account (id) to *osu! *(name of the account)  
 - ‘osuunlink’: Unbind account  
 - ‘rs’: See his last score  
 - ‘osurdm’: Get a random beatmap by difficulty  
@@ -56,6 +56,11 @@ To ensure proper operation, please include:
 ### 🎲 Miscellaneous  
 - ‘dice’: Roll a die (1-6)  
 - ‘talk’: Generate a random phrase  
+
+### 🛠️​ Moderator Commands
+- ‘welcome’ : Set welcome messages for your server and in which channel the bot will send it (for the moment, messages aren't customizable, but are randoms)
+- ‘autoban’ : Using a list of user which has already been spotted as bad, it'll ban them automatically if activated. You can also set where the message (for what reasons the user has been banned) will be sended 
+
 
 ## 🤖 4 - Bot interactions  
 In addition to the commands, Miyo interacts in several ways:  
