@@ -69,7 +69,7 @@ In addition to the commands, Miyo interacts in several ways:
 Miyo has an integrated moderation system, with the following restrictions:  
 
 - Block links to known porn sites  
-- Detection and sanction of spam (automatic muting)  
+- Detection and sanction of spam (automatic muting). It mute even if it's not in the same channel and it's the same message too many times (like if someone send "hey" in different channels, this person will be mute). It can save you from a token-grabbed person, which send only one time in a channel a link
 - Limiting the abuse of bot commands  
 
 These restrictions cannot be disabled at this time.  
