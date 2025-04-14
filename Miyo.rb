@@ -487,8 +487,45 @@ WELCOME_GIFS = [
   "[Un avenir radieux se présente à nous !](https://tenor.com/mX1oju0QV2b.gif)",
   "[Bienvenue !](https://tenor.com/iuy8xBOlRxS.gif)",
   "[HEYOOOOO](https://tenor.com/bZZVI.gif)",
-  "[L'invitation a été prise en compte !](https://tenor.com/lwhjabJxnbu.gif)"
+  "[L'invitation a été prise en compte !](https://tenor.com/lwhjabJxnbu.gif)",
+  "[Un membre en plus, un !](https://tenor.com/kCiRbFqdLmk.gif)",
+  "[Welcome in the palace baby.](https://tenor.com/hOFPVAXMuCY.gif)",
+  "[Dépêchez-vous de lui dire bienvenue enfin !](https://tenor.com/bbvZR.gif)",
+  "[J'en suis ému.](https://tenor.com/v7ofWS0M329.gif)",
+  "[Son flow est tellement énorme !](https://tenor.com/vOsc.gif)",
+  "[Je t'invoques, nouveau membre !](https://tenor.com/bnwng.gif)",
+  "[Bon choix !](https://tenor.com/GXmU.gif)",
+  "[Fêtons celà !](https://tenor.com/bYGCg.gif)",
+  "[Okkei !](https://tenor.com/bRtFG.gif)",
+  "[Coucou !](https://tenor.com/b14qi.gif)",
+  "[HAYYYYO !](https://tenor.com/bwtXM.gif)",
+  "[POURQUOI T'ES PAS VENU PLUS TÔT ???](https://tenor.com/lpxOGwxcz1r.gif)",
+  "[Nice !](https://tenor.com/bia9u.gif)",
+  "[Let's goooo !](https://tenor.com/brGXr.gif)",
+  "[Parfait !](https://tenor.com/ni6UjJBYBiF.gif)",
+  "[Real footage of me on my way to welcome you](https://tenor.com/w4bN.gif)",
+  "[Prends place ici !](https://tenor.com/bDGkM.gif)",
+  "[BIENVENUE ! ÇA VA ? TU FAIS QUOI DE BEAU ? C'EST QUOI TES PASSIONS ?](https://tenor.com/b0gtP.gif)",
+  "[Bienvenue parmis-nous !](https://tenor.com/bVJcM.gif)",
+  "[Mais c'est super ça ! J'espère que tu y trouveras ta place !](https://tenor.com/bWYzp.gif)",
+  "[Bienvenue !](https://tenor.com/gzz5k1lQP54.gif)",
+  "[YAY !](https://tenor.com/btUTb.gif)",
+  "[YAY !](https://tenor.com/uQNM6NTAzic.gif)",
+  "[Ça n'atteindra pas ma grandeur, mais ça à le mérite d'être une bonne nouvelle.](https://tenor.com/bnQeh.gif)",
+  "[Viens par là !](https://tenor.com/v8dGBu6DpwJ.gif)",
+  "[Yo !](https://tenor.com/bXQ27.gif)",
+  "[T'as un 06 ? T'es tellement bg en même temps](https://tenor.com/bXHK0.gif)",
+  "[Meh, ta présence m'occupera au moins](https://tenor.com/ugCvuIS5pXJ.gif)",
+  "[Dance de la victoire be like :](https://tenor.com/bXNGX.gif)",
+  "[Real footage of me fainting when you joined :](https://tenor.com/bHwIj.gif)",
+  "[Dépêchez-vous de lui dire bienvenue enfin !](https://tenor.com/blqM6.gif)",
+  "[LET'S GOOOOO](https://tenor.com/7OTa.gif)",
+  "[UN NOUVEAU ???](https://tenor.com/bPhDt.gif)",
+  "[Coucou !](https://tenor.com/bpYmT.gif)",
+  "[Moi, Miyo, détentrice de l’Œil Crépusculaire de la Vérité Ultime, élue par le Conseil Occulte de la Troisième Dimension Cachée, t’invoque ici-même, dans le royaume scellé par les sceaux runiques du Chaos Brillant !\nEn posant les pieds dans cette zone sanctifiée, tu as déclenché le Rituel d’Éveil des Âmes Égarées, et ton destin est désormais lié au mien par les chaînes invisibles du pacte sacré.\nPrends garde, voyageur stellaire, car cet endroit est un nexus interdimensionnel où les pensées prennent vie, où les emojis sont des familiers magiques, et où les règles sont écrites dans une langue que seuls les vrais éveillés peuvent lire.\nN’oublie pas : seul l’Œil de la Vérité peut discerner le bon du faux post, et seul le cœur pur peut survivre à la tempête des threads perdus.\nEngage-toi avec courage, commente avec bravoure, et surtout, protège ton âme des spoilers maudits !\nPar l’autorité du Grand Conseil Lunaire…\n**Bienvenue.**\nQue ton pouvoir caché se réveille… maintenant.](https://tenor.com/bLC2V.gif)",
+  "[Moi, Miyo… non, Dark Flame Master, ancien héraut du Néant Flamboyant et gardien du Contrat Déchu des Neuf Cercles Silencieux, je me tiens devant toi.\nBien que j’aie scellé mes pouvoirs dans les abysses du quotidien, ce sanctuaire — ce forum — m’a rappelé… et j’ai répondu à l’appel.\nToi qui lis ces lignes, sache que tu as franchi le Voile des Mondes Simulés, et tu pénètres à présent dans un espace où les lois de la logique sont secondaires face à l’énergie du cœur.\nIci, les mots sont des incantations, les réactions des pactes, et chaque thread un fragment d’univers.\nEngage-toi avec honneur, et n’oublie jamais : même l’ombre la plus noire contient une lueur de flamme.\nAlors je t’accueille, voyageur interplanaire, au nom du Conseil Silencieux de la Lueur Oubliée…\nBienvenue.\nMais souviens-toi… le véritable pouvoir dort encore en toi.](https://tenor.com/bF16c.gif)"
 ]
+
 
 WELCOME_MESSAGES = [
   "Hey {user}! Bienvenue sur {server} !",
@@ -507,7 +544,16 @@ WELCOME_MESSAGES = [
   "Quoi ?! Elsa et Michou sont plus en couple ? Mouais nan pas intéressant, contrairement à notre nouveau membre : {user} !",
   "Ohhhh, allez une dernière Maman ! Oups mauvais chat... REGARDEZ LÀ BAS, C'EST {user}\n**Part en courant**",
   "Tiens ? Un nouveau sujet est apparus dans la cour. Quel est ton nom ? {user} ? Bienvenue dans {server} !",
-  "Oh ! {user} ! Bienvenue dans {server}"
+  "Oh ! {user} ! Bienvenue dans {server}",
+  "Bienvenue {user} !",
+  "Un nouveau membre est apparu, et il s'agit de {user} !",
+  "J'utilise la loi 49 alinéa 3 pour vous obliger à dire bienvenue à {user} !",
+  "Ma maman m'a dit de pas parler aux inconnus, mais vu que tu es désormais dans le serveur, tu n'es plus un inconnu {user} !",
+  "{user} ! Enfin ! Je m'impatientais de ta venue sur {server}!",
+  "MREKK À ENCORE DÉFIÉ LA LIMITE HUMAINE ??? Mouais, normal quoi... Oh mais attends... {user} À REJOINT LE SERVEUR ??? FÊTONS ÇA !",
+  "Z'AVEZ VU MON NOUVEAU LEGO ? Nan on s'en fout tous, c'est pas important comparé à... PAF, R'GARDEZ L'NOUVEAU MEMBRE ! C'est {user} !",
+  "{user} n'a jamais arrêté d'apprendre, c'est pour ça qu'il est à présent membre du serveur, et comme a dit un grand homme, n'arrêtez jamais d'apprendre !",
+  "Pauline, on a un problème. {user} est là mais je ne peux pas acceuilir sa grandeur de façons convenables..."
 ]
 
 #Forbidden links
@@ -529,15 +575,27 @@ FORBIDDEN_LINKS = [
 
 # Activities
 activities = [
-  "Sumire, best game ever",
-  "Enter the Gungeon, quit a cool game",
-  "Persona 4 The Golden, peak",
-  "Persona 3 : Reload, fire",
-  "Persona 5, still really good",
-  "Osu, best rythm game",
-  "My friend Peppa Pig, GOTY",
-  "League of Legends, dunno what I've done in life to end like this",
-  "Cookie Clicker, help me"
+  "Sumire, best game ever.",
+  "Enter the Gungeon, quit a cool game.",
+  "Persona 4 The Golden, peak.",
+  "Persona 3 : Reload, fire.",
+  "Persona 5, still really good.",
+  "Osu, best rythm game.",
+  "My friend Peppa Pig, GOTY.",
+  "League of Legends, dunno what I've done in life to end like this.",
+  "Cookie Clicker, help me.",
+  "Valorant, I'm cooked chat.",
+  "NieR Automata, incredible AAA game.",
+  "Hollow Knight, my controller is now inside my screen.",
+  "Doki Doki Litterature Club, the cutest game <3",
+  "Elden Ring, I've first tried Malenia (I'm lying).",
+  "Celeste, one of my favorite game.",
+  "Titanfall 2, NAHHHH BT !!! WHY ????",
+  "Miside, yes, I'm a simp.",
+  "Danganronpa, yes, I'm not oki-doki.",
+  "Fear and Hunger, 50h play time for a save with only 10h.",
+  "Garfield Kart, yes I'm too poor to affort a Nintendo Switch 2.",
+  "Half life, yes, I'm still waiting."
 ]
 
 COMMANDS = [
@@ -629,13 +687,20 @@ bot.command(:banuseradd) do |event, *args|
 
   if event.server.member(user_id)
     begin
+      user.pm.send_message(
+        "**Bonjour,**\n\nVous avez été automatiquement banni de **#{event.server.name}** par le système d'autoban de Miyo.\n\n📄 **Raison :** #{reason}\n\nSi vous pensez qu’il s’agit d’une erreur, vous pouvez ajouter <@#{MY_USER_ID}> en ami pour en discuter, ou rejoindre ce serveur : https://discord.gg/SeJr7ANamW"
+      )
+    rescue
+      puts "Impossible d’envoyer un message privé à #{user.distinct}."
+    end
+  
+    begin
       event.server.ban(user, reason: "Ajout à la liste des bannis : #{reason}")
     rescue StandardError
       puts "Impossible de bannir #{user.username}"
     end
   end
-end
-
+end  
 
 
 bot.command(:banuserremove) do |event, user_id|
@@ -668,106 +733,111 @@ bot.command(:banuserlist) do |event|
   end
 end
 
+bot.command :autoban do |event|
+  is_admin = event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
+  unless is_admin
+    event.respond "Vous n'avez pas la permission d'utiliser cette commande."
+    next
+  end
 
+  server_id = event.server.id
+  status = autoban_enabled?(server_id, starboard_settings) ? "activé" : "désactivé"
 
-bot.command(:autoban) do |event, subcmd, arg|
-  break unless is_moderator_or_owner?(event)
+  command_users[event.user.id] = Time.now
 
-  server_id = event.server.id.to_s
-  starboard_settings = load_starboard_settings
-  starboard_settings[server_id] ||= {}
+  event.channel.send_embed do |embed|
+    embed.title = "Système d'auto bannissement"
+    embed.description = "Le système d'auto bannissement est actuellement **#{status}** sur ce serveur.\nCe système vous permet de bannir automatiquement des personnes qui ont été perçues comme peu recommandables sur d'autres serveurs dès qu'elles rejoignent, ou après une petite période de temps. Ce système n'est pas parfait, il n'empêche pas et n'empêchera jamais quelqu'un d'envoyer un contenu contraire aux règles ou conditions d'utilisation de Discord, et n'empêche en aucun cas la création d'un second compte.\n\nVoici les options :\n- Activer ou désactiver ce système\n- Modifier le salon d'envoi\n\nDépêchez-vous, je n'ai guère de temps à vous accorder."
+    embed.color = 0x3498db
+    embed.timestamp = Time.now
+    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+      name: "Miyo",
+      url: "https://fr.tipeee.com/miyo-bot-discord/",
+      icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+    )
+    embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+    embed.add_field(
+      name: "Si vous souhaitez contribuer au système d'autoban, en ajoutant quelqu'un par exemple, veuillez en parler ici (preuves à l'appui demandées)",
+      value: "[Museau's World](https://discord.gg/SeJr7ANamW)",
+      inline: true
+    )
+    embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+  end
 
-  case subcmd
-  when "on"
-    starboard_settings[server_id]["autoban_enabled"] = true
-    save_starboard_settings(starboard_settings)
-    event.channel.send_embed do |embed|
-      embed.title = "Système d'auto bannissement"
-      embed.description = "Le système d'auto bannissement est désormais actif sur ce serveur. Je ne tolérerai aucun bélître qui s'est déjà fait remarqué...\n\n\n"
-      embed.color = 0x3498db 
-      embed.timestamp = Time.now
-
-      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-        name: "Miyo",
-        url: "https://fr.tipeee.com/miyo-bot-discord/",
-        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
-      )
-  
-      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
-        text: "Signé,\nMiyo.",
-      )
-
-      embed.add_field(name: "Si vous souhaitez contribuer au système d'autoban, en ajoutant quelqu'un par exemple, veuillez en parler ici (preuves à l'appuie demandée)", value: "[Museau's World](https://discord.gg/SeJr7ANamW)", inline: true)
-      embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+  menu_message = event.channel.send_message(
+    '', false, nil, nil, nil, nil,
+    Discordrb::Components::View.new do |builder|
+      builder.row do |r|
+        r.string_select(custom_id: 'autoban_select', placeholder: 'Choisissez une option', max_values: 1) do |ss|
+          ss.option(label: 'Activer/Désactiver le système', value: '1', emoji: { name: '1️⃣' })
+          ss.option(label: "Modifier le salon d'envoi", value: '2', emoji: { name: '2️⃣' })
+        end
+      end
     end
-  when "off"
-    starboard_settings[server_id]["autoban_enabled"] = false
-    save_starboard_settings(starboard_settings)
-    event.channel.send_embed do |embed|
-      embed.title = "Système d'auto bannissement"
-      embed.description = "Le système d'auto bannissement est désormais inactif sur ce serveur. Une période de relâchement je présume...\n\n\n"
-      embed.color = 0x3498db 
-      embed.timestamp = Time.now
+  )
 
-      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-        name: "Miyo",
-        url: "https://fr.tipeee.com/miyo-bot-discord/",
-        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
-      )
-  
-      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
-        text: "Signé,\nMiyo.",
-      )
-
-      embed.add_field(name: "Si vous souhaitez contribuer au système d'autoban, en ajoutant quelqu'un par exemple, veuillez en parler ici (preuves à l'appuie demandée)", value: "[Museau's World](https://discord.gg/SeJr7ANamW)", inline: true)
-      embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
-    end
-  when "setchannel"
-    if arg.nil? || !arg.match?(/^<#?(\d+)>$/)
-      event.respond "Afin de bien paramètrer ce système, je vous invite à faire la même commande dans ces formats : \n`!autoban setchannel #salon` ou `!autoban setchannel salon_id`"
-      next
-    end
-
-    channel_id = arg.match(/^<#?(\d+)>$/)[1].to_i
-    begin
-      channel = bot.channel(channel_id)
-    rescue => e
-      channel = nil
-    end
-
-    if channel && channel.server.id == event.server.id
-      starboard_settings[server_id]["log_channel_id"] = channel.id
-      save_starboard_settings(starboard_settings)
-      event.respond "Le salon où seront posté les messages d'auto ban seront désormais dans le salon #{channel.mention}"
-    else
-      starboard_settings[server_id]["log_channel_id"] = channel_id
-      save_starboard_settings(starboard_settings)
-      event.respond "J'ai remué ciel terre et mer, mais je n'ai pas trouvé votre salon. Toutefois, j'ai quand même sauvegardé l'id du salon, qui n'est autre que **#{channel_id}**. Ma prestance ne pouvant y accèder, je vous demanderais de vérifier les permissions que vous m'avez donné, et les permissions de ce fameux salon."
-    end
-  else
-    status = autoban_enabled?(server_id, starboard_settings) ? "activé" : "désactivé"
-    event.channel.send_embed do |embed|
-      embed.title = "Système d'auto bannissement"
-      embed.description = "Le système d'auto bannissement est actuellement **#{status}** sur ce serveur.\n Ce système vous permet de bannir automatiquement des personnes qui ont été perçus comme peu recommandable sur d'autres serveurs dès qu'ils rejoignent,\nou après une petite periode de temps. Ce système n'est pas parfait, il n'empêche pas et n'empêchera jamais quelqu'un d'envoyer un contenus plus que limite, contraire à l'éthique, vos règles ou les conditions d'utilisations discord, et n'empêche en aucun cas un second compte d'être créé par un utilisateur. \nÉgalement,il faut que l'utilisateur apparaisse dans la liste, ce qui doit faire l'objet d'un ticket sur notre serveur (disponible un peu plus en bas).\nLe but est de maximiser les chances à de petites communautés de grandir sereinement, et au plus grande de purger les personnes susceptibles de causer des problèmes.\nVoici les options\n\n- Activer ou désactiver ce système avec `!autoban on` ou `autoban off`\n- Activer le pourquoi du comment la personne a été bannis dans un salon (désactivé même lorsque vous activer le système). Il s'active avec la commande `!autoban setchannel {nom ou id du salon}`\n\nBien, j'en eu trop dis. Je vous laisse donc le choix. Mais dépêchez, je n'ai guère plus de temps à vous accorder."
-      embed.color = 0x3498db 
-      embed.timestamp = Time.now
-
-      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-        name: "Miyo",
-        url: "https://fr.tipeee.com/miyo-bot-discord/",
-        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
-      )
-  
-      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
-        text: "Signé,\nMiyo.",
-      )
-
-      embed.add_field(name: "Si vous souhaitez contribuer au système d'autoban, en ajoutant quelqu'un par exemple, veuillez en parler ici (preuves à l'appuie demandée)", value: "[Museau's World](https://discord.gg/SeJr7ANamW)", inline: true)
-      embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+  Thread.new do
+    sleep 30
+    if Time.now - command_users[event.user.id] >= 30
+      menu_message.delete
+      command_users.delete(event.user.id)
     end
   end
 end
 
+
+bot.string_select(custom_id: 'autoban_select') do |event|
+  if command_users[event.user.id].nil?
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  command_users[event.user.id] = Time.now
+
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  autoban_settings = server_settings['autoban_system'] || {}
+
+  case event.values.first
+  when '1'
+    autoban_settings['active'] = !autoban_settings.fetch('active', false)
+    event.interaction.respond(content: "Le système d'auto bannissement est désormais #{autoban_settings['active'] ? 'activé' : 'désactivé'}.", ephemeral: true)
+  when '2'
+    event.interaction.respond(content: "Veuillez sélectionner le salon pour les messages de l'auto bannissement.", ephemeral: false)
+    event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.channel_select(custom_id: 'autoban_channel_select', placeholder: 'Sélectionnez le salon', max_values: 1)
+        end
+      end
+    )
+  end
+
+  server_settings['autoban_system'] = autoban_settings
+  settings[event.server.id.to_s] = server_settings
+  save_starboard_settings(settings)
+end
+
+bot.channel_select(custom_id: 'autoban_channel_select') do |event|
+  if command_users[event.user.id].nil?
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  command_users[event.user.id] = Time.now
+
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  autoban_settings = server_settings['autoban_system'] || {}
+
+  autoban_settings['log_channel_id'] = event.values.first.id
+  event.interaction.respond(content: "Le salon d'auto bannissement est désormais <##{event.values.first.id}>.", ephemeral: true)
+
+  server_settings['autoban_system'] = autoban_settings
+  settings[event.server.id.to_s] = server_settings
+  save_starboard_settings(settings)
+end
 bot.message do |event|
   next unless event.server 
 
@@ -868,7 +938,7 @@ bot.command :embed do |event|
   event.channel.send_embed do |embed|
     embed.title = "Titre de l'embed"
     embed.description = "Ceci est un message embed avec **discordrb** !"
-    embed.color = 0x3498db # Couleur bleue
+    embed.color = 0x3498db
     embed.timestamp = Time.now
 
     embed.author = Discordrb::Webhooks::EmbedAuthor.new(
@@ -1135,18 +1205,6 @@ bot.message do |event|
   end
 end
 
-bot.message do |event|
-  if event.content.downcase.include?('ça va et toi') || event.content.downcase.include?('bien et toi')
-    case humeur()
-    when 1 then bot.send_message(event.channel.id, "Je vais bien également !")
-    when 2 then bot.send_message(event.channel.id, "Je me sens bien aujourd'hui aussi")
-    when 3 then bot.send_message(event.channel.id, "Ça va ça va, la journée se passe tranquillement")
-    when 4 then bot.send_message(event.channel.id, "Ça va ! Un peu calme aujourd'hui mais ça se passe !")
-    else bot.send_message(event.channel.id, "Something went wrong. Please try again.")
-    end
-  end
-end
-
 # French (needs to be in the same with english and ask english or french)
 bot.message do |event|
   if event.content.downcase.include?('ça va et toi') || event.content.downcase.include?('bien et toi')
@@ -1180,8 +1238,6 @@ bot.message(start_with: '!museau') do |event|
   lng = rand(-180.0..180.0).round(6)
 
   google_map_link = "https://www.google.com/maps?q=#{lat},#{lng}"
-
-  # Mise à jour de l'URL de prévisualisation avec le paramètre "red-pushpin"
   preview_url = "https://staticmap.openstreetmap.de/staticmap.php?center=#{lat},#{lng}&zoom=15&size=600x300&markers=#{lat},#{lng},red-pushpin"
 
   embed = Discordrb::Webhooks::Embed.new(
@@ -1624,52 +1680,50 @@ bot.command :osuunlink do |event|
   end
 end
 
-bot.message do |event|
-  if event.message.content == '!welcome'
-    is_admin = event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
-    unless is_admin
-      event.respond "Vous n'avez pas la permission d'utiliser cette commande."
-      next
-    end
+bot.command :welcome do |event|
+  is_admin = event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
+  unless is_admin
+    event.respond "Vous n'avez pas la permission d'utiliser cette commande."
+    next
+  end
 
-    command_users[event.user.id] = Time.now
+  command_users[event.user.id] = Time.now
 
-    event.channel.send_embed do |embed|
-      embed.title = "Système de bienvenue !"
-      embed.description = "Vous prévoyez d'accueillir de nouvelles personnes ? Voici ce que je peux faire :\n\n- Activer ou désactiver le système de bienvenue\n- Modifier le salon d'envoi du message de bienvenue\n\nDépêchez vous, je n'ai guère votre temps."
-      embed.color = 0x3498db
-      embed.timestamp = Time.now
-      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-        name: "Miyo",
-        url: "https://fr.tipeee.com/miyo-bot-discord/",
-        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
-      )
-      embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
-    end
+  event.channel.send_embed do |embed|
+    embed.title = "Système de bienvenue !"
+    embed.description = "Vous prévoyez d'accueillir de nouvelles personnes ? Voici ce que je peux faire :\n\n- Activer ou désactiver le système de bienvenue\n- Modifier le salon d'envoi du message de bienvenue\n\nDépêchez-vous, je n'ai guère votre temps."
+    embed.color = 0x3498db
+    embed.timestamp = Time.now
+    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+      name: "Miyo",
+      url: "https://fr.tipeee.com/miyo-bot-discord/",
+      icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+    )
+    embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+  end
 
-    menu_message = event.channel.send_message(
-      '', false, nil, nil, nil, nil,
-      Discordrb::Components::View.new do |builder|
-        builder.row do |r|
-          r.string_select(custom_id: 'string_select', placeholder: 'Choisissez une option', max_values: 1) do |ss|
-            ss.option(label: 'Activer/Désactiver le système', value: '1', emoji: { name: '1️⃣' })
-            ss.option(label: "Modifier le salon d'envoi", value: '2', emoji: { name: '2️⃣' })
-          end
+  menu_message = event.channel.send_message(
+    '', false, nil, nil, nil, nil,
+    Discordrb::Components::View.new do |builder|
+      builder.row do |r|
+        r.string_select(custom_id: 'welcome_select', placeholder: 'Choisissez une option', max_values: 1) do |ss|
+          ss.option(label: 'Activer/Désactiver le système', value: '1', emoji: { name: '1️⃣' })
+          ss.option(label: "Modifier le salon d'envoi", value: '2', emoji: { name: '2️⃣' })
         end
       end
-    )
+    end
+  )
 
-    Thread.new do
-      sleep 30
-      if Time.now - command_users[event.user.id] >= 30
-        menu_message.delete
-        command_users.delete(event.user.id)
-      end
+  Thread.new do
+    sleep 30
+    if Time.now - command_users[event.user.id] >= 30
+      menu_message.delete
+      command_users.delete(event.user.id)
     end
   end
 end
 
-bot.string_select do |event|
+bot.string_select(custom_id: 'welcome_select') do |event|
   if command_users[event.user.id].nil?
     event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
     next
@@ -1686,12 +1740,12 @@ bot.string_select do |event|
     welcome_settings['active'] = !welcome_settings.fetch('active', false)
     event.interaction.respond(content: "Le système de bienvenue est maintenant #{welcome_settings['active'] ? 'activé' : 'désactivé'}.", ephemeral: true)
   when '2'
-    event.interaction.respond(content: "Veuillez sélectionner le salon pour les messages de bienvenue.", ephemeral: true)
+    event.interaction.respond(content: "Veuillez sélectionner le salon pour les messages de bienvenue.", ephemeral: false)
     event.channel.send_message(
       '', false, nil, nil, nil, nil,
       Discordrb::Components::View.new do |builder|
         builder.row do |r|
-          r.channel_select(custom_id: 'channel_select', placeholder: 'Sélectionnez le salon', max_values: 1)
+          r.channel_select(custom_id: 'welcome_channel_select', placeholder: 'Sélectionnez le salon', max_values: 1)
         end
       end
     )
@@ -1702,7 +1756,7 @@ bot.string_select do |event|
   save_starboard_settings(settings)
 end
 
-bot.channel_select do |event|
+bot.channel_select(custom_id: 'welcome_channel_select') do |event|
   if command_users[event.user.id].nil?
     event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
     next
@@ -1723,55 +1777,71 @@ bot.channel_select do |event|
 end
 
 bot.member_join do |event|
-  # Récupération de la liste des utilisateurs bannis
-  banned_users = load_banned_users
-  user_id_str = event.user.id.to_s
+  settings = load_starboard_settings
+  server_id_str = event.server.id.to_s
 
-  if banned_users.key?(user_id_str)
-    # --- Partie Bannissement Automatique ---
-    user = event.user
-    reason = banned_users[user_id_str]['reason'] || 'Aucune raison précisée'
-    
-    begin
-      event.server.ban(user, reason: "Autoban : inscrit dans la liste noire - Raison: #{reason}")
-      puts "Utilisateur #{user.distinct} banni automatiquement à l’arrivée dans #{event.server.name}."
-  
-      # Envoi du message de log dans le salon configuré
-      starboard_settings = load_starboard_settings
-      log_channel_id = starboard_settings[event.server.id.to_s] && starboard_settings[event.server.id.to_s]["log_channel_id"]
-      
-      if log_channel_id
-        # On utilise bot.channel pour être certain d'avoir le salon dans le cache global
-        log_channel = bot.channel(log_channel_id)
-        if log_channel && log_channel.server.id == event.server.id && log_channel.type == 0
-          log_channel.send_message("🚫 **#{user.distinct}** a été banni automatiquement à l’arrivée.\n> **Raison** : #{reason}")
-        else
-          puts "Salon de log non trouvé pour le serveur #{event.server.name} (ID: #{log_channel_id})."
+  # Créer la config par défaut si le serveur n'existe pas encore
+  settings[server_id_str] ||= {}
+  settings[server_id_str]['autoban_system'] ||= {
+    "active" => false,
+    "autoban_enabled" => false,
+    "log_channel_id" => nil
+  }
+  settings[server_id_str]['welcome_system'] ||= {
+    "active" => false,
+    "welcome_channel_id" => nil
+  }
+
+  # Sauvegarder les settings mis à jour (si nécessaire)
+  save_starboard_settings(settings)
+
+  # Accès sécurisé aux valeurs
+  autoban_coucou = settings[server_id_str]['autoban_system']
+  autoban_active = autoban_coucou['active']
+
+  if autoban_active == true || autoban_active.to_s == 'true'
+    banned_users = load_banned_users
+    user_id_str = event.user.id.to_s
+
+    if banned_users.key?(user_id_str)
+      user = event.user
+      reason = banned_users[user_id_str]['reason'] || 'Aucune raison précisée'
+
+      begin
+        event.server.ban(user, reason: "Autoban : inscrit dans la liste noire - Raison: #{reason}")
+        puts "Utilisateur #{user.distinct} banni automatiquement à l’arrivée dans #{event.server.name}."
+
+        log_channel_id = autoban_coucou["log_channel_id"]
+        if log_channel_id
+          log_channel = bot.channel(log_channel_id)
+          if log_channel && log_channel.server.id == event.server.id && log_channel.type == 0
+            log_channel.send_message("🚫 **#{user.distinct}** a été banni automatiquement à l’arrivée.\n> **Raison** : #{reason}")
+          else
+            puts "Salon de log non trouvé ou invalide pour le serveur #{event.server.name} (ID: #{log_channel_id})."
+          end
         end
+      rescue StandardError => e
+        puts "Erreur lors du bannissement automatique : #{e.message}"
       end
-    rescue StandardError => e
-      puts "Erreur lors du bannissement automatique : #{e.message}"
     end
   else
-    # --- Partie Système de Bienvenue ---
-    settings = load_starboard_settings
-    server_settings = settings[event.server.id.to_s] || {}
-    welcome_settings = server_settings['welcome_system'] || {}
-    if welcome_settings['active']
-      target_channel = event.server.text_channels.find { |c| c.id == welcome_settings['welcome_channel_id'] }
-      if target_channel
-        sleep 5
-        mention = "<@#{event.user.id}>"
-        # On sélectionne aléatoirement un message et un GIF de bienvenue
-        welcome_text = WELCOME_MESSAGES.sample.gsub("{user}", mention).gsub("{server}", event.server.name)
-        gif = WELCOME_GIFS.sample
-        allowed = Discordrb::AllowedMentions.new(users: [event.user.id])
-        target_channel.send_message("#{welcome_text}\n#{gif}", false, nil, nil, allowed)
-      end
+    puts "Autoban inactif ou désactivé pour #{event.server.name}."
+  end
+
+  # Système de bienvenue
+  welcome_settings = settings[server_id_str]['welcome_system']
+  if welcome_settings['active']
+    target_channel = event.server.text_channels.find { |c| c.id == welcome_settings['welcome_channel_id'] }
+    if target_channel
+      sleep 5
+      mention = "<@#{event.user.id}>"
+      welcome_text = WELCOME_MESSAGES.sample.gsub("{user}", mention).gsub("{server}", event.server.name)
+      gif = WELCOME_GIFS.sample
+      allowed = Discordrb::AllowedMentions.new(users: [event.user.id])
+      target_channel.send_message("#{welcome_text}\n#{gif}", false, nil, nil, allowed)
     end
   end
 end
-
 
 bot.message do |event|
   content = event.message.content
