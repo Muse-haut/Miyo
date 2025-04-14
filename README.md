@@ -63,7 +63,7 @@ In addition to the commands, Miyo interacts in several ways:
 
 - **IA integrated**: Active when you mention *Miyo* or reply to his messages.  
 - **Specific reactions**: Reacts to certain words and media types.  
-- **Reaction "feur"**: When someone ends a sentence with “what”, the bot automatically responds “feur”.  
+- **Reaction "feur"**: When someone ends a sentence with “quoi”, the bot automatically responds “feur”.  
 
 ## 🛡 5 - Bot moderation  
 Miyo has an integrated moderation system, with the following restrictions:  
