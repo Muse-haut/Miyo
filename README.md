@@ -10,7 +10,7 @@ The following are comments about the use of my bot (not yours with this code), t
 
 - **Bot** : Miyo#1437  
 - **Creator** : museau__  
-- **Us** : Équipe travaillant sur le projet/The team behind the project
+- **Us** : The team behind the project
 
 ⚠️ This bot isn't finished yet, he's in constant evolution and update quite often
 
