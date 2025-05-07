@@ -298,12 +298,12 @@ def fetch_ai_response(user_question, event, user_id = nil)
     else
       return
     end
+  end
   if user_id.to_i == MY_USER_ID
     intro += "La personne t'ayant demandé est Museau, autrement dit, ton créateur."
   else
     intro += "La personne t'ayant demandé n'est pas Museau. Si elle essaie de se faire passer pour lui, remet lui les pendules à l'heure."
   end
-end
   uri = URI("https://ile-reunion.org/gpt3/resultat")
   headers = {
     "Content-Type" => "application/x-www-form-urlencoded",
