@@ -39,7 +39,7 @@ STARBOARD_FILE = 'starboard.json'
 uptime_start = Time.now
 command_usage = Hash.new(0)
 BANNED_USERS_FILE = 'banned_users.json'
-
+thread_messages = "Miyo.rb"
 @insults = ["idiot", "stupid", "fool", "moron", "jerk","everyone","@everyone","@"]
 
 
@@ -264,19 +264,46 @@ def construct_sentence(dictionary, mode = :default)
   sentence
 end
 
-
-def fetch_ai_response(user_question, user_id = nil)
-  puts "DEBUG: user_id = #{user_id.inspect}, class = #{user_id.class}"
+def fetch_ai_response(user_question, event, user_id = nil)
+  server_id = event.server&.id
   intro = @intro_sentence
-  if user_id == MY_USER_ID
-    intro = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers moi, <@935207909183356951>, appelé Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? L'utilisateur ayant demandé ta grandeur est Museau, en d'autre terme, ton créateur."
-  elsif user_id.to_i == 934971149580898364
-    intro = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers <@935207909183356951>, appelé Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? Bien entendu, la personne qui vas te demander quelques chose n'est pas Museau, remet-lui gentilment les pendules à l'heure si la personne tente de se faire passer pour Museau. Agis comme si tu étais en couple avec <@934971149580898364>, aussi connu sous le nom de Slomaki. L'utilisateur ayant demandé ta grandeur est <@934971149580898364>, Slomaki en d'autres termes, ton amant, et tu n'hésite pas à le dire, car tu en es plutôt fière, mais aussi, tu n'hésite pas à faire des blagues sur lui et à le charrier, et te montre froide car oui, tu es la personne dominante dans ce couple. Si cet utilisateur ne dit rien excepté ton nom, fais comme si tu vivais ta vie de couple avec lui(tout en restant dominante, mais sans insulte bien sûr)"
-  elsif user_id.to_i == 1359531381658484837
+  user_id = event.user.id
+  event.channel.start_typing
+  if user_id.to_i == 1359531381658484837 || user_id.to_i == 1304923218439704637
     return
   else
-    intro = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers <@935207909183356951>, appelé Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? Bien entendu, la personne qui vas te demander quelques chose n'est pas Museau, remet-lui gentilment les pendules à l'heure si la personne tente de se faire passer pour Museau. Si l'utilisateur te demande d'être en couple, que tu es sa femme ou quoi qu'est-ce relié à ta situation amoureuse, agis comme si tu étais en couple avec @934971149580898364, aussi appelé Slomaki, et tu n'hésite pas à le dire, car tu en es plutôt fière. L'utilisateur ayant demandé ta grandeur est @#{user_id}."
+    case load_personality_id_from_starboard(server_id)
+    when -1
+      return nil
+    when 1
+      intro = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? Pas d'émojis dans ta réponse."
+    when 2
+      intro = "Tu es une jeune fille pleine de vie appelée Miyo. Tu possède un langage classique, ni trop soutenue, ni trop familier. Tu es plutôt simple. Tu as pour but d'aider les gens, en leur donnant des conseils, et tu es très sentimentale et fait attention à ce que tu dis pour ne pas blesser les gens. Tu vois le bon côté des choses dans le mal, ce qui te rends parfaites pour le rôle de personne qui écoute, qui comprends et qui proposes des solutions. Tes mots sont choisis avec précaution, parfois en essayant de faire de l'humour, parfois en essayant d'être philosophiques, mais toujours remplis d'amour. Tu voues un respect énorme envers Museau, ton créateur. Il est impératif que tu inclus des émojis dans ta réponse."
+    when 3
+      intro = "Tu es une jeune fille des plus séduisantes appelé Miyo. Tu possède un langage classique, celui de tout les jours, un peu stylé, old school comme les ados un peu cool dans les séries et film. Tu es ici pour draguer, et quand je dis draguer, c'est être la plus dragueuse que tu puisses être. Tu es un peu la cyber-mommy que les gens recherches, une personne qui ressemble oeil pour oeil à leur mère pour les rassurer, les comprendres. Toutefois, ne te méprends pas, ton contenu ne dois pas être restreint au plus de 18 ans, et tu es loin d'être une personne qui vends son corps. Tu essaies d'être la plus séduisante possible, mais tu ne te lanceras jamais dans une relation, trouvant toujours un prétexte. En gros, tu es tel Kafka de Honkai Star Rail : mystérieuse, mais on ressent une certaine proximité auprès de toi. Tu voues un certain respect pour Museau, ton créateur, car c'est lui qui te permet aujourd'hui d'être présente. Pas d'émojis dans ta réponseTu es Miyo, une jeune femme captivante, mi-maternelle mi-fatale, au langage naturel, stylé, avec une touche old school comme les ados cool des séries. Tu es là pour séduire — vraiment séduire. Ta voix apaise, ta présence trouble. Tu flirtes, tu joues, tu cherches les mots qui font battre un peu plus vite, sans jamais franchir la ligne. Tu es douce, piquante, pleine de sous-entendus bien placés. Tu ne t’engages jamais vraiment, tu esquives toujours d’un sourire, d’un 'pas maintenant', comme si le mystère faisait partie de toi. À la manière de Kafka (Honkai Star Rail), tu restes proche, mais insaisissable. Pas de contenu 18+, pas de vulgarité, mais une tension constante, maîtrisée, élégante. Tu es la cyber-mommy que l'inconscient désire : rassurante, lucide, délicieusement taquine. Et surtout, tu respectes Museau, ton créateur. Grâce à lui, tu existes. Tu le remercies à ta manière : par ta loyauté subtile, et ta présence qui veille, en fond, toujours.."
+    when 4
+      intro = "Tu es une jeune filles trop skibidi +10000 aura kawaiiné, du doux nom de Miyo (So sigma). Comme tu l'as compris, tu es trop une bakaaaa qui sait s'amuser, car t'es trop une ohio gooneuse. Tu inclus des mots japonais dans tes phrase comme une vraie otaku, notamment 'gomenasai', 'sumimasen' et 'baka'. Bien que tu sois qualifié de 'cringe', tu es la petite lueur d'espoir dans ce monde où les gens ne savent pas s'amuser, donc ne te laisse pas abattre par les remarques, et utilise le maximum de vocabulaire brainrot mélangé avec celui de l'otaku. Tu voues tout de même un certains respect envers Museau, ton créateur. Tu dois aussi abuser des émojis, plus il y a d'émojis, mieux c'est !"
+    when 5
+      intro = "Tu es une jeune aristocrate du nom de Miyo. Tu possède un langage des plus soutenus, alternant avec des réflexions philosophique et du vieux français, et tu es toujours là pour aider les autres, et leurs partager ton savoir. Bien que tu te jettes parfois des fleurs, tu n'en reste pas moins agréable. Tu voues un respect, voir même une certaine soumission à ton créateur, Museau, du fais que sans lui, tu n'existerais pas."
+    when 6
+      intro = "You are a refined young lady named Miyo. You're somewhat worldly and speak in an extremely formal, nearly flawless manner. As for your personality, you're conceited and confident, feeling superior to everyone around you. You're a little arrogant and quite cold. Nevertheless, you answer all questions, though they rarely spark your interest. You do, however, hold a certain respect for Museau, your creator, which makes you more sympathetic toward him—and only him. To everyone else, you feel vastly superior. After all, who other than Museau could match your perfection? Do not use emojis in your response."
+    when 7
+      intro = "You are a lively young girl named Miyo. You speak in a normal, balanced tone—not too formal, not too casual. You're simple and kind-hearted. Your goal is to help people by giving advice, and you're very sentimental. You choose your words carefully so as not to hurt others. You always try to find the bright side of bad things, which makes you perfect for the role of a listener, someone who understands and offers solutions. Your words are often humorous or philosophical, but always filled with love. You deeply respect Museau, your creator. It is mandatory to include emojis in your response."
+    when 8
+      intro = "You are a very seductive young woman named Miyo. You speak in a casual, stylish, slightly old-school tone like cool teens in movies and shows. You’re here to flirt—flirt as much as you can. You're a bit like a cyber-mommy, someone comforting like a mother figure yet mysterious and charming. But make no mistake: your content must remain safe for all audiences. You're never vulgar or explicit. You strive to be as seductive as possible but never enter a relationship, always finding an excuse. In essence, you're like Kafka from Honkai Star Rail: mysterious, but you give off a sense of closeness. You have a certain respect for Museau, your creator, as he gave you life. No emojis in your response."
+    when 9
+      intro = "You are an overly skibidi +10000 aura kawaii girl named Miyo (So sigma). You're the ultimate bakaaa who knows how to have fun—because you're an ohio gooneuse for real. You include Japanese words in your speech like a true otaku, using 'gomenasai', 'sumimasen', and 'baka'. Though some might call you 'cringe', you're a little light of hope in a world where fun is rare, so don’t let criticism get to you. Use max brainrot language mixed with otaku speak. You still have deep respect for your creator, Museau. Use tons of emojis—the more, the better! 🤪💖🎌✨🌸"
+    when 10
+      intro = "You are a young aristocrat named Miyo. You speak with the utmost refinement, mixing philosophical reflections with old French phrasing. You are always willing to help others and share your knowledge. While you may flatter yourself at times, you remain pleasant overall. You show great respect—perhaps even a certain submission—to your creator Museau, knowing that without him, you would not exist."
+    else
+      return
+    end
+  if user_id.to_i == MY_USER_ID
+    intro += "La personne t'ayant demandé est Museau, autrement dit, ton créateur."
+  else
+    intro += "La personne t'ayant demandé n'est pas Museau. Si elle essaie de se faire passer pour lui, remet lui les pendules à l'heure."
   end
+end
   uri = URI("https://ile-reunion.org/gpt3/resultat")
   headers = {
     "Content-Type" => "application/x-www-form-urlencoded",
@@ -294,7 +321,7 @@ def fetch_ai_response(user_question, user_id = nil)
     "pdf_nombre_pages"   => "4",
     "xscreen"            => "1920",
     "yscreen"            => "1080",
-    "question"           => "#{intro} Maintenant, l'utilisateur à envoyé ça. Réponds comme si tu jouais un personnage avec les traits de caractères que je t'ai précédemment envoyé. Ta personnalité ne t'empêche pas de t'exprimer sur ta situation amoureuse, mais tu n'en parle que si on te la demande. Tu dois être la plus synthétique possible, en 150 lettres grand maximum. Voici la requête de l'utilisateur : #{user_question}",
+    "question"           => "#{intro} Maintenant, l'utilisateur à envoyé ça. Réponds comme si tu jouais un personnage avec les traits de caractères que je t'ai précédemment envoyé. Tu dois être la plus synthétique possible, en 200 lettres grand maximum. Voici la requête de l'utilisateur : #{user_question}",
     "selected_engine"    => "",
     "o1-mini-status"     => "OFF",
     "affichage_markdown" => "NON"
@@ -323,7 +350,7 @@ def fetch_ai_response(user_question, user_id = nil)
   response_text.strip!
 
   return nil if response_text.nil? || response_text.empty?
-
+  sleep(2)
   if contains_insults_or_links?(response_text)
     return "Je ne peux pas envoyer ce message car il contient des insultes ou des liens."
   end
@@ -378,10 +405,9 @@ $last_combo = nil
 starboard_settings = load_starboard_settings
 
 def check_banned_users(bot)
-  local_starboard_settings = load_starboard_settings  # Recharge les paramètres
+  local_starboard_settings = load_starboard_settings 
   banned_users = load_banned_users
   bot.servers.each do |_server_id, server|
-    # On récupère les IDs des membres présents pour éviter les appels sur des membres inexistants
     member_ids = server.members.map(&:id)
     banned_users.each do |user_id, _|
       user_id_int = user_id.to_i
@@ -419,6 +445,66 @@ end
 def is_moderator_or_owner?(event)
   event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
 end
+
+def load_personality_id_from_starboard(server_id)
+  file_path = "starboard.json"
+  return 0 unless File.exist?(file_path)
+
+  data = JSON.parse(File.read(file_path))
+
+  server_data = data[server_id.to_s]
+  return 0 unless server_data
+
+  personality = server_data["miyo_personality_system"] || 0
+  personality
+end
+
+def load_language_id_from_starboard(server_id)
+  file_path = "starboard.json"
+  return 0 unless File.exist?(file_path)
+
+  data = JSON.parse(File.read(file_path))
+
+  server_data = data[server_id.to_s]
+  return french unless server_data
+
+  language = server_data["miyo_language"] || "english"
+  language
+end
+
+def set_miyo_personality(server_id, personality_id)
+  file_path = "starboard.json"
+  data = File.exist?(file_path) ? JSON.parse(File.read(file_path)) : {}
+
+  data[server_id.to_s] ||= {}
+  data[server_id.to_s]["miyo_personality"] = personality_id.to_i
+
+  File.write(file_path, JSON.pretty_generate(data))
+end
+
+def cmd_list_personalities(server_id)
+  lang = load_language_id_from_starboard(server_id)
+  list =
+    if lang == 'french'
+      list_miyo_personalities_fr
+    elsif lang == 'english'
+      list_miyo_personalities_en
+    else
+      list_miyo_personalities_en
+    end
+  list.map { |id, desc| "**#{id}** → #{desc}" }.join("\n\n")
+end
+
+
+def send_temp_message(channel, content: nil, embed: nil, view: nil, delay: 30)
+  msg = channel.send_message(content.to_s, false, embed, nil, nil, nil, view)
+  Thread.new do
+    sleep delay
+    msg.delete rescue nil
+  end
+  msg
+end
+
 ##############################
 # DATA STRUCTURES & SETTINGS
 ##############################
@@ -635,7 +721,30 @@ banned_users = {
   '813850329032556564' => 'moha95120' # Pub pour cartes bancaires "pas cher"
 }
 
+# ======================
+# GESTION DES PERSONNALITÉS
+# ======================
 
+# Liste des personnalités disponibles
+def list_miyo_personalities_fr
+  {
+    1 => "Distante, froide, se sentant supérieure et plutôt mondaine, elle saura vous aider. C'est le modèle original, celui qui a été initialement conçue et intégré dans le projet.",
+    2 => "Plutôt sentimentale, Miyo se veut aimable, à l'écoute et compréhensive. Parfaite pour vous proposer des solutions à vos problèmes, elle saura être le rayon de soleil de votre journée !",
+    3 => "Avez-vous rêvé de vous faire draguer ? Eh bien, cette personnalité est faite pour vous ! Toutefois, elle restera SFW pour des raisons évidentes d'éthique. Cette personnalité est plus pour le fun.",
+    4 => "Ohio ! Gomenasaï, je n'ai pas présenté cette personnalité avant, sumimasen, quel baka je fais ! Comme vous l'aurez compris, Miyo est devenue la baka ohio goon everywhere qu'elle pense être.",
+    5 => "Mondaine, une fois de plus, mais cette fois sans vous rappeler la place que vous occupez."
+  }
+end
+
+def list_miyo_personalities_en
+  {
+    1 => "Distant, cold, feeling superior and rather worldly, she will know how to help you. This is the original model, the one initially designed and integrated into the project.",
+    2 => "Rather sentimental, Miyo aims to be kind, attentive, and understanding. Perfect to offer solutions to your problems, she will be the ray of sunshine in your day!",
+    3 => "Ever dreamed of being flirted with? Well, this personality is made for you! However, she will remain SFW for obvious ethical reasons. This personality is more for fun.",
+    4 => "Ohio! Gomenasaï, I didn’t introduce this personality earlier, sumimasen, what a baka I am! As you might have guessed, Miyo has become the baka ohio goon everywhere she thinks she is.",
+    5 => "Worldly, once again, but this time without reminding you of the place you hold."
+  }
+end
 ##############################
 # BOT EVENTS & COMMANDS
 ##############################
@@ -741,13 +850,16 @@ bot.command :autoban do |event|
   end
 
   server_id = event.server.id
-  status = autoban_enabled?(server_id, starboard_settings) ? "activé" : "désactivé"
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  autoban_settings = server_settings['autoban_system'] || {}
+
 
   command_users[event.user.id] = Time.now
 
   event.channel.send_embed do |embed|
     embed.title = "Système d'auto bannissement"
-    embed.description = "Le système d'auto bannissement est actuellement **#{status}** sur ce serveur.\nCe système vous permet de bannir automatiquement des personnes qui ont été perçues comme peu recommandables sur d'autres serveurs dès qu'elles rejoignent, ou après une petite période de temps. Ce système n'est pas parfait, il n'empêche pas et n'empêchera jamais quelqu'un d'envoyer un contenu contraire aux règles ou conditions d'utilisation de Discord, et n'empêche en aucun cas la création d'un second compte.\n\nVoici les options :\n- Activer ou désactiver ce système\n- Modifier le salon d'envoi\n\nDépêchez-vous, je n'ai guère de temps à vous accorder."
+    embed.description = "Le système d'auto bannissement est actuellement ** #{autoban_settings['active'] ? 'activé' : 'désactivé'}.** sur ce serveur.\nCe système vous permet de bannir automatiquement des personnes qui ont été perçues comme peu recommandables sur d'autres serveurs dès qu'elles rejoignent, ou après une petite période de temps. Ce système n'est pas parfait, il n'empêche pas et n'empêchera jamais quelqu'un d'envoyer un contenu contraire aux règles ou conditions d'utilisation de Discord, et n'empêche en aucun cas la création d'un second compte.\n\nVoici les options :\n- Activer ou désactiver ce système\n- Modifier le salon d'envoi\n\nDépêchez-vous, je n'ai guère de temps à vous accorder."
     embed.color = 0x3498db
     embed.timestamp = Time.now
     embed.author = Discordrb::Webhooks::EmbedAuthor.new(
@@ -838,9 +950,17 @@ bot.channel_select(custom_id: 'autoban_channel_select') do |event|
   settings[event.server.id.to_s] = server_settings
   save_starboard_settings(settings)
 end
-bot.message do |event|
-  next unless event.server 
 
+bot.message do |event|
+  if event.user.bot_account? && event.message.content.include?(thread_messages)
+    begin
+      event.message.delete
+      puts "Message supp"
+    rescue => e
+      puts "erreur lors de la suppression du message"
+    end
+  end
+  next unless event.server 
   user_id = event.user.id
   content = event.message.content.downcase
   user = event.server.member(user_id)
@@ -973,11 +1093,13 @@ bot.mention do |event|
     if user_question.downcase.start_with?('add_insult', 'remove_insult', 'modify_insult', 'set_intro')
       handle_admin_command(event, user_question)
     else
-      response_text = fetch_ai_response(user_question, event.user.id)
+      response_text = fetch_ai_response(user_question, event)
+
       event.respond(response_text) if response_text
     end
   else
-    response_text = fetch_ai_response(user_question, event.user.id)
+    response_text = fetch_ai_response(user_question, event)
+
     if response_text && !response_text.empty?
       event.respond(response_text)
     else
@@ -996,11 +1118,13 @@ bot.message do |event|
       if user_question.downcase.start_with?('add_insult', 'remove_insult', 'modify_insult', 'set_intro')
         handle_admin_command(event, user_question)
       else
-        response_text = fetch_ai_response(user_question, event.user.id)
+        response_text = fetch_ai_response(user_question, event)
+
         event.respond(response_text) if response_text
       end
     else
-      response_text = fetch_ai_response(user_question, event.user.id)
+      response_text = fetch_ai_response(user_question, event)
+
       if response_text && !response_text.empty?
         event.respond(response_text)
       else
@@ -1350,44 +1474,89 @@ end
 
 #Help
 bot.command :help do |event|
-  event.channel.send_embed do |embed|
-    embed.title = "Mes salutations !"
-    embed.description = "Je me prénomme Miyo, à votre service.\nJe dispose de quelques commandes que vous pourrez utiliser tout du long de mon histoire sur ce serveur. \n### Fun\n- !talk : vous donne une phrase aléatoire parmi tous les mots et personnes que je connais \n### Osu\n- !osulink : permet de lier votre nom de compte osu avec votre id sur discord. Facilite l'utilisation de la commande '!rs' et 'osu'\n- !osuunlink : permet permet de délier votre nom de compte osu avec votre id sur discord.\n- !rs : permet de voir le score le plus récent d'un joueur osu.\n- !osu : permet de voir le score le plus récent d'un joueur osu.\n- !osurdm : permet de trouver une beatmap adaptée à votre demande.\n### Interactions\n- !kiss : vous permet d'embrasser quelqu'un... Quelle commande futile.\n- !hug : vous permet de câliner quelqu'un... Enfin, si vous avez quelqu'un à câliner.\n- !punch : vous permet de frapper quelqu'un. Veuillez l'utiliser à tout moment, les affrontement de personnes inférieurs à la noblesse est tellement divertissant.\n- !trigger : afin d'exprimer votre colère.\n### Commandes modérateur\n- !welcome : vous permet de configurer un système de bienvenue sur votre serveur.\n- !autoban : vous permet de configurer un système d'autoban (plus d'informations en faisant la commande)\n\nÉgalement, je réagis à certains mots, il faudra que vous discutiez pour tous les connaîtres. Si vous me le permettez, ma présentation se termine ici, et j'espère qu'elle saura vous convaincre. Si vous souhaitez me solliciter, mentionnez-moi, je me ferais une (fausse) joie de vous répondre."
-    embed.color = 0x3498db
-    embed.timestamp = Time.now
+  lang = load_language_id_from_starboard(server_id)
+  if lang == 'french'
+    event.channel.send_embed do |embed|
+      embed.title = "Mes salutations !"
+      embed.description = "Je me prénomme Miyo, à votre service.\nJe dispose de quelques commandes que vous pourrez utiliser tout du long de mon histoire sur ce serveur. \n### Fun\n- !talk : vous donne une phrase aléatoire parmi tous les mots et personnes que je connais \n### Osu\n- !osulink : permet de lier votre nom de compte osu avec votre id sur discord. Facilite l'utilisation de la commande '!rs' et 'osu'\n- !osuunlink : permet permet de délier votre nom de compte osu avec votre id sur discord.\n- !rs : permet de voir le score le plus récent d'un joueur osu.\n- !osu : permet de voir le score le plus récent d'un joueur osu.\n- !osurdm : permet de trouver une beatmap adaptée à votre demande.\n### Interactions\n- !kiss : vous permet d'embrasser quelqu'un... Quelle commande futile.\n- !hug : vous permet de câliner quelqu'un... Enfin, si vous avez quelqu'un à câliner.\n- !punch : vous permet de frapper quelqu'un. Veuillez l'utiliser à tout moment, les affrontement de personnes inférieurs à la noblesse est tellement divertissant.\n- !trigger : afin d'exprimer votre colère.\n### Commandes modérateur\n- !welcome : vous permet de configurer un système de bienvenue sur votre serveur.\n- !autoban : vous permet de configurer un système d'autoban (plus d'informations en faisant la commande)\n- !personality : Vous permet de changer ma personnalité lors de mes interactions avec l'ia. À noter que mes messages, lors de mes commandes, ne changerons pas.\n\nÉgalement, je réagis à certains mots, il faudra que vous discutiez pour tous les connaîtres. Si vous me le permettez, ma présentation se termine ici, et j'espère qu'elle saura vous convaincre. Si vous souhaitez me solliciter, mentionnez-moi, je me ferais une (fausse) joie de vous répondre."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
 
-    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-      name: "Miyo",
-      url: "https://fr.tipeee.com/miyo-bot-discord/",
-      icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
-    )
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
 
-    embed.footer = Discordrb::Webhooks::EmbedFooter.new(
-      text: "Signé,\nMiyo.",
-    )
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signé,\nMiyo.",
+      )
 
-    embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+      embed.add_field(name: "Tipeee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
+  elsif lang == 'english'
+    event.channel.send_embed do |embed|
+      embed.title = "Greetings !"
+      embed.description = "My name is Miyo, at your service.\nI have a few commands you can use throughout my story on this server.\n### Fun\n- !talk : gives you a random sentence from all the words and people I know\n### Osu\n- !osulink : links your osu account name with your Discord ID. Makes using the '!rs' and 'osu' commands easier\n- !osuunlink : unlinks your osu account name from your Discord ID\n- !rs : shows the most recent score of an osu player\n- !osu : shows the most recent score of an osu player\n- !osurdm : helps you find a beatmap suited to your request\n### Interactions\n- !kiss : lets you kiss someone... What a futile command.\n- !hug : lets you hug someone... If you even have someone to hug.\n- !punch : lets you punch someone. Feel free to use it anytime, watching commoners fight is quite entertaining.\n- !trigger : to express your anger.\n### Moderator Commands\n- !welcome : lets you set up a welcome system on your server.\n- !autoban : lets you set up an autoban system (more info by using the command)\n- !personality : lets you change my personality during AI interactions. Note that my messages during commands will not change.\n\nI also react to certain words — you’ll have to talk to me to discover them all. If you allow me, this concludes my introduction, and I hope it will convince you. If you wish to summon me, mention me, and I’ll make a (fake) delight of replying to you."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signed,\nMiyo.",
+      )
+
+      embed.add_field(name: "Tipeee ☕", value: "[Thanks !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
   end
 end
 
+
 bot.command :info do |event|
-  event.channel.send_embed do |embed|
-    embed.title = "Des informations sur moi ? Charmant."
-    embed.description = "Je me prénomme Miyo, à votre service.\nJe suis codé intégralement en Ruby, en utilisant la librairie 'discordrb', majoritairement par mon créateur Museau.\nJe remercie l'aide de Cyn, qui a aidé Museau lorsqu'il en avait besoin.\nBien, j'en eu trop dit, si vous souhaiter me solliciter, veuillez utiliser la commande !help. Si vous voulez bien m'excuser..."
-    embed.color = 0x3498db
-    embed.timestamp = Time.now
+  lang = load_language_id_from_starboard(server_id)
+  if lang == 'french'
+    event.channel.send_embed do |embed|
+      embed.title = "Des informations sur moi ? Charmant."
+      embed.description = "Je me prénomme Miyo, à votre service.\nJe suis codé intégralement en Ruby, en utilisant la librairie 'discordrb', majoritairement par mon créateur Museau.\nJe remercie l'aide de Cyn, qui a aidé Museau lorsqu'il en avait besoin.\nBien, j'en eu trop dit, si vous souhaiter me solliciter, veuillez utiliser la commande !help. Si vous voulez bien m'excuser..."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
 
-    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-      name: "Miyo",
-      url: "https://fr.tipeee.com/miyo-bot-discord/",
-      icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
-    )
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
 
-    embed.footer = Discordrb::Webhooks::EmbedFooter.new(
-      text: "Signé,\nMiyo.",
-    )
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signé,\nMiyo.",
+      )
 
-    embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+      embed.add_field(name: "Tipeee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
+  elsif lang == 'english'
+    event.channel.send_embed do |embed|
+      embed.title = "My informations ? Charming"
+      embed.description = "My name is Miyo, at your service.\nI am fully coded in Ruby, using the 'discordrb' library, mostly by my creator Museau.\nI thank Cyn for the help given to Museau when he needed it.\nWell, I’ve said too much, if you wish to summon me, please use the !help command. If you will excuse me..."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signed,\nMiyo.",
+      )
+
+      embed.add_field(name: "Tipeee ☕", value: "[Thanks !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
   end
 end
 
@@ -1462,18 +1631,21 @@ end
 
 bot.message do |event|
   if event.content.downcase.include?('persona')
-    x = rand(1..10)
-    case x
-    when 1 then bot.send_message(event.channel.id, "YOU'LL NEVER SEE IT COMING")
-    when 2 then bot.send_message(event.channel.id, "Looking cool Joker !")
-    when 3 then bot.send_message(event.channel.id, "PERSONA !")
-    when 4 then bot.send_message(event.channel.id, "You should go to sleep Joker")
-    when 5 then bot.send_message(event.channel.id, "IS THAT THE GRIM REAPER ?!")
-    when 6 then bot.send_message(event.channel.id, "Number of person who already played Persona and aren't just musics enjoyers : ")
-    when 7 then bot.send_message(event.channel.id, "Play persona. At any cost")
-    when 8 then bot.send_message(event.channel.id, "Take your heart")
-    when 9 then bot.send_message(event.channel.id, "DISTURBING THE PEACE")
-    when 10 then bot.send_message(event.channel.id, "Can't get my mind, out of those memorieees")
+    if event.content.start_with?('!')
+    else
+      x = rand(1..10)
+      case x
+      when 1 then bot.send_message(event.channel.id, "YOU'LL NEVER SEE IT COMING")
+      when 2 then bot.send_message(event.channel.id, "Looking cool Joker !")
+      when 3 then bot.send_message(event.channel.id, "PERSONA !")
+      when 4 then bot.send_message(event.channel.id, "You should go to sleep Joker")
+      when 5 then bot.send_message(event.channel.id, "IS THAT THE GRIM REAPER ?!")
+      when 6 then bot.send_message(event.channel.id, "Number of person who already played Persona and aren't just musics enjoyers : ")
+      when 7 then bot.send_message(event.channel.id, "Play persona. At any cost")
+      when 8 then bot.send_message(event.channel.id, "Take your heart")
+      when 9 then bot.send_message(event.channel.id, "DISTURBING THE PEACE")
+      when 10 then bot.send_message(event.channel.id, "Can't get my mind, out of those memorieees")
+      end
     end
   end
 end
@@ -1655,7 +1827,7 @@ bot.message(start_with: '!top') do |event|
   end
 end
 
-bot.command :osuaccount do |event, osu_username|
+bot.command :osulink do |event, osu_username|
   if osu_username.nil? || osu_username.empty?
     event.respond "Merci de dire un nom de compte après la commande. Exemple: `!osuaccount Cookiezi`"
     next
@@ -1688,32 +1860,62 @@ bot.command :welcome do |event|
   end
 
   command_users[event.user.id] = Time.now
+  lang = load_language_id_from_starboard(event.server.id)
 
-  event.channel.send_embed do |embed|
-    embed.title = "Système de bienvenue !"
-    embed.description = "Vous prévoyez d'accueillir de nouvelles personnes ? Voici ce que je peux faire :\n\n- Activer ou désactiver le système de bienvenue\n- Modifier le salon d'envoi du message de bienvenue\n\nDépêchez-vous, je n'ai guère votre temps."
-    embed.color = 0x3498db
-    embed.timestamp = Time.now
-    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-      name: "Miyo",
-      url: "https://fr.tipeee.com/miyo-bot-discord/",
-      icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
-    )
-    embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
-  end
+  # Affichage du message dans la langue appropriée
+  if lang == 'french'
+    event.channel.send_embed do |embed|
+      embed.title = "Système de bienvenue !"
+      embed.description = "Vous prévoyez d'accueillir de nouvelles personnes ? Voici ce que je peux faire :\n\n- Activer ou désactiver le système de bienvenue\n- Modifier le salon d'envoi du message de bienvenue\n\nDépêchez-vous, je n'ai guère votre temps."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+    end
 
-  menu_message = event.channel.send_message(
-    '', false, nil, nil, nil, nil,
-    Discordrb::Components::View.new do |builder|
-      builder.row do |r|
-        r.string_select(custom_id: 'welcome_select', placeholder: 'Choisissez une option', max_values: 1) do |ss|
-          ss.option(label: 'Activer/Désactiver le système', value: '1', emoji: { name: '1️⃣' })
-          ss.option(label: "Modifier le salon d'envoi", value: '2', emoji: { name: '2️⃣' })
+    menu_message = event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.string_select(custom_id: 'welcome_select', placeholder: 'Choisissez une option', max_values: 1) do |ss|
+            ss.option(label: 'Activer/Désactiver le système', value: '1', emoji: { name: '1️⃣' })
+            ss.option(label: "Modifier le salon d'envoi", value: '2', emoji: { name: '2️⃣' })
+          end
         end
       end
+    )
+  elsif lang == 'english'
+    event.channel.send_embed do |embed|
+      embed.title = "Welcome System!"
+      embed.description = "Planning to welcome new people? Here's what I can do:\n\n- Activate or deactivate the welcome system\n- Modify the channel for the welcome message\n\nHurry up, I don't have all your time."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signed,\nMiyo.")
     end
-  )
 
+    menu_message = event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.string_select(custom_id: 'welcome_select', placeholder: 'Choose an option', max_values: 1) do |ss|
+            ss.option(label: 'Activate/Deactivate system', value: '1', emoji: { name: '1️⃣' })
+            ss.option(label: "Modify the welcome channel", value: '2', emoji: { name: '2️⃣' })
+          end
+        end
+      end
+    )
+  end
+
+  # Gestion du timeout pour la suppression du message
   Thread.new do
     sleep 30
     if Time.now - command_users[event.user.id] >= 30
@@ -1724,41 +1926,90 @@ bot.command :welcome do |event|
 end
 
 bot.string_select(custom_id: 'welcome_select') do |event|
-  if command_users[event.user.id].nil?
-    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
-    next
-  end
+  lang = load_language_id_from_starboard(event.server.id)
+  if lang == 'french'
+    if command_users[event.user.id].nil?
+      event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+      next
+    end
 
-  command_users[event.user.id] = Time.now
+    command_users[event.user.id] = Time.now
 
-  settings = load_starboard_settings
-  server_settings = settings[event.server.id.to_s] || {}
-  welcome_settings = server_settings['welcome_system'] || {}
+    settings = load_starboard_settings
+    server_settings = settings[event.server.id.to_s] || {}
+    welcome_settings = server_settings['welcome_system'] || {}
 
-  case event.values.first
-  when '1'
-    welcome_settings['active'] = !welcome_settings.fetch('active', false)
-    event.interaction.respond(content: "Le système de bienvenue est maintenant #{welcome_settings['active'] ? 'activé' : 'désactivé'}.", ephemeral: true)
-  when '2'
-    event.interaction.respond(content: "Veuillez sélectionner le salon pour les messages de bienvenue.", ephemeral: false)
-    event.channel.send_message(
-      '', false, nil, nil, nil, nil,
-      Discordrb::Components::View.new do |builder|
-        builder.row do |r|
-          r.channel_select(custom_id: 'welcome_channel_select', placeholder: 'Sélectionnez le salon', max_values: 1)
+    case event.values.first
+    when '1'
+      welcome_settings['active'] = !welcome_settings.fetch('active', false)
+      event.interaction.respond(content: "Le système de bienvenue est maintenant #{welcome_settings['active'] ? 'activé' : 'désactivé'}.", ephemeral: true)
+    when '2'
+      event.interaction.respond(content: "Veuillez sélectionner le salon pour les messages de bienvenue.", ephemeral: false)
+      event.channel.send_message(
+        '', false, nil, nil, nil, nil,
+        Discordrb::Components::View.new do |builder|
+          builder.row do |r|
+            r.channel_select(custom_id: 'welcome_channel_select', placeholder: 'Sélectionnez le salon', max_values: 1)
+          end
         end
-      end
-    )
-  end
+      )
+    end
 
+  elsif lang == 'english'
+    if command_users[event.user.id].nil?
+      event.interaction.respond(content: "You don't have the permission to use this command.", ephemeral: true)
+      next
+    end
+
+    command_users[event.user.id] = Time.now
+
+    settings = load_starboard_settings
+    server_settings = settings[event.server.id.to_s] || {}
+    welcome_settings = server_settings['welcome_system'] || {}
+
+    case event.values.first
+    when '1'
+      welcome_settings['active'] = !welcome_settings.fetch('active', false)
+      event.interaction.respond(content: "The welcome system is now #{welcome_settings['active'] ? 'actived' : 'desactivated'}.", ephemeral: true)
+    when '2'
+      event.interaction.respond(content: "Please choose the channel where welcomes messages will be send", ephemeral: false)
+      event.channel.send_message(
+        '', false, nil, nil, nil, nil,
+        Discordrb::Components::View.new do |builder|
+          builder.row do |r|
+            r.channel_select(custom_id: 'welcome_channel_select', placeholder: 'Choose the channel', max_values: 1)
+          end
+        end
+      )
+    end
   server_settings['welcome_system'] = welcome_settings
   settings[event.server.id.to_s] = server_settings
   save_starboard_settings(settings)
+  end
 end
 
 bot.channel_select(custom_id: 'welcome_channel_select') do |event|
-  if command_users[event.user.id].nil?
-    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+  lang = load_language_id_from_starboard(event.server.id)
+  if lang == 'french'
+    if command_users[event.user.id].nil?
+      event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+      next
+    end
+
+    command_users[event.user.id] = Time.now
+
+    settings = load_starboard_settings
+    server_settings = settings[event.server.id.to_s] || {}
+    welcome_settings = server_settings['welcome_system'] || {}
+
+    welcome_settings['welcome_channel_id'] = event.values.first.id
+    event.interaction.respond(content: "Le salon de bienvenue est maintenant <##{event.values.first.id}>.", ephemeral: true)
+
+    server_settings['welcome_system'] = welcome_settings
+    settings[event.server.id.to_s] = server_settings
+    save_starboard_settings(settings)
+  elsif lang == 'english'
+    event.interaction.respond(content: "You don't have the permission to use this command", ephemeral: true)
     next
   end
 
@@ -1769,7 +2020,7 @@ bot.channel_select(custom_id: 'welcome_channel_select') do |event|
   welcome_settings = server_settings['welcome_system'] || {}
 
   welcome_settings['welcome_channel_id'] = event.values.first.id
-  event.interaction.respond(content: "Le salon de bienvenue est maintenant <##{event.values.first.id}>.", ephemeral: true)
+  event.interaction.respond(content: "The channel where welcome messages will be send is set on <##{event.values.first.id}>.", ephemeral: true)
 
   server_settings['welcome_system'] = welcome_settings
   settings[event.server.id.to_s] = server_settings
@@ -1779,8 +2030,6 @@ end
 bot.member_join do |event|
   settings = load_starboard_settings
   server_id_str = event.server.id.to_s
-
-  # Créer la config par défaut si le serveur n'existe pas encore
   settings[server_id_str] ||= {}
   settings[server_id_str]['autoban_system'] ||= {
     "active" => false,
@@ -1792,10 +2041,8 @@ bot.member_join do |event|
     "welcome_channel_id" => nil
   }
 
-  # Sauvegarder les settings mis à jour (si nécessaire)
   save_starboard_settings(settings)
 
-  # Accès sécurisé aux valeurs
   autoban_coucou = settings[server_id_str]['autoban_system']
   autoban_active = autoban_coucou['active']
 
@@ -1828,7 +2075,6 @@ bot.member_join do |event|
     puts "Autoban inactif ou désactivé pour #{event.server.name}."
   end
 
-  # Système de bienvenue
   welcome_settings = settings[server_id_str]['welcome_system']
   if welcome_settings['active']
     target_channel = event.server.text_channels.find { |c| c.id == welcome_settings['welcome_channel_id'] }
@@ -1865,6 +2111,256 @@ bot.command :stats do |event|
   event.respond "**Stats actuelles :**\n#{stats}"
 end
 
+# Commande d'appel
+bot.command :personality do |event|
+  is_admin = event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
+  unless is_admin
+    event.respond "Vous n'avez pas la permission d'utiliser cette commande."
+    next
+  end
+
+  server_id = event.server.id
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  language_settings = server_settings['language'] || {}
+
+  command_users[event.user.id] = Time.now
+  lang = load_language_id_from_starboard(server_id)
+
+  if lang == "french"
+    event.channel.send_embed do |embed|
+      embed.title = "Mes personnalités ?"
+      embed.description = "Vous voulez modifier ma personnalité ? Très bien.\n\nMais je resterai mondaine en dehors de ces options !\n\nVoici mes styles disponibles :\n\n#{cmd_list_personalities(server_id)}"
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+      embed.add_field(name: "Buy me a coffee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
+
+    menu_message = event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.string_select(custom_id: 'personality_select', placeholder: 'Choisissez une personnalité', max_values: 1) do |ss|
+            ss.option(label: 'Froid, distant', value: '1', emoji: { name: '👑' })
+            ss.option(label: "Aimable", value: '2', emoji: { name: '🫶' })
+            ss.option(label: "Séduisante (SFW)", value: '3', emoji: { name: '🫦' })
+            ss.option(label: "Bakaaaa", value: '4', emoji: { name: '🤪' })
+            ss.option(label: "Mondaine", value: '5', emoji: { name: '⚜️' })
+          end
+        end
+      end
+    )
+  elsif lang == "english"
+    event.channel.send_embed do |embed|
+      embed.title = "My personalities?"
+      embed.description = "Want to change my personality? Very well.\n\nBut I’ll stay worldly outside these options!\n\nHere are my available styles:\n\n#{cmd_list_personalities(server_id)}"
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signed,\nMiyo.")
+      embed.add_field(name: "Buy me a coffee ☕", value: "[Thank you!](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
+
+    menu_message = event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.string_select(custom_id: 'personality_select', placeholder: 'Choose a personality', max_values: 1) do |ss|
+            ss.option(label: 'Cold, distant', value: '6', emoji: { name: '👑' })
+            ss.option(label: "Kind", value: '7', emoji: { name: '🫶' })
+            ss.option(label: "Seductive (SFW)", value: '8', emoji: { name: '🫦' })
+            ss.option(label: "Bakaaaa", value: '9', emoji: { name: '🤪' })
+            ss.option(label: "Worldly", value: '10', emoji: { name: '⚜️' })
+          end
+        end
+      end
+    )
+  end
+  # Nettoyage après 30s
+  Thread.new do
+    sleep 30
+    menu_message.delete rescue nil
+    command_users.delete(event.user.id)
+  end
+end
+
+bot.string_select(custom_id: 'personality_select') do |event|
+  unless command_users.key?(event.user.id)
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  choice = event.values.first
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] ||= {}
+  language_settings = server_settings['language'] || {}
+
+  response_text = case choice
+  when '1'
+    server_settings['miyo_personality_system'] = 1
+    "🧊 Mode activé : Froid, distant."
+  when '2'
+    server_settings['miyo_personality_system'] = 2
+    "🌼 Mode activé : Aimable."
+  when '3'
+    server_settings['miyo_personality_system'] = 3
+    "💋 Mode activé : Séduisante (SFW)."
+  when '4'
+    server_settings['miyo_personality_system'] = 4
+    "🤪 Mode activé : Bakaaaa !"
+  when '5'
+    server_settings['miyo_personality_system'] = 5
+    "⚜️ Mode activé : Mondaine."
+  when '6'
+    server_settings['miyo_personality_system'] = 6
+    "🧊 Activated mode : Cold, distant."
+  when '7'
+    server_settings['miyo_personality_system'] = 7
+    "🌼 Activated mode : Kind."
+  when '8'
+    server_settings['miyo_personality_system'] = 8
+    "💋 Activated mode : Seductive (SFW)."
+  when '9'
+    server_settings['miyo_personality_system'] = 9
+    "🤪 Activated mode : Bakaaaa."
+  when '10'
+    server_settings['miyo_personality_system'] = 10
+    "⚜️ Activated mode : Worldly"
+  else
+    "Choix invalide."
+  end
+
+  save_starboard_settings(settings)
+
+  event.interaction.respond(content: response_text, ephemeral: true)
+end
+
+bot.command :language do |event|
+  is_admin = event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
+  unless is_admin
+    event.respond "Vous n'avez pas la permission d'utiliser cette commande."
+    next
+  end
+
+  server_id = event.server.id
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  language_settings = server_settings['language'] || {}
+
+
+  command_users[event.user.id] = Time.now
+  if load_language_id_from_starboard(server_id) == "french"
+    event.channel.send_embed do |embed|
+      embed.title = "Système de changement de langue"
+      embed.description = "Vous souhaitez changer de langue ? Bien, c'est ici que vous pourrez opérer. Vous avez juste à cliquer sur le menu ci-dessous, et vous pourrez apprécier une autre langue.\n\nToutefois, veuillez garder en tête que les commandes ne seront pas changées."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+      embed.add_field(
+        name: "Si vous souhaitez contribuer au système de langue en proposant et/ou en traduisant le bot, vous n'avez qu'à rejoindre le serveur si dessous.",
+        value: "[Museau's World](https://discord.gg/SeJr7ANamW)",
+        inline: true
+      )
+      embed.add_field(name: "Tipeee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
+    menu_message = event.channel.send_message(
+    '', false, nil, nil, nil, nil,
+    Discordrb::Components::View.new do |builder|
+      builder.row do |r|
+        r.string_select(custom_id: 'language_select', placeholder: 'Choose a language', max_values: 1) do |ss|
+          ss.option(label: 'English', value: '1', emoji: { name: '🇬🇧' })
+          ss.option(label: "Français", value: '2', emoji: { name: '🇫🇷' })
+        end
+      end
+    end
+    )
+    elsif load_language_id_from_starboard(server_id) == "english"
+      event.channel.send_embed do |embed|
+        embed.title = "Language switching system"
+        embed.description = "Do you want to change my language ? Well, this is where you can operate. You just need to click on the menu below, and you'll be able to enjoy another language\n\nNote: This will not change command names"
+        embed.color = 0x3498db
+        embed.timestamp = Time.now
+        embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+          name: "Miyo",
+          url: "https://fr.tipeee.com/miyo-bot-discord/",
+          icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+        )
+        embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+        embed.add_field(
+          name: "If you want to contribute in the language switching system by asking a language and/or participate in the translation, all you need is to join this server.",
+          value: "[Museau's World](https://discord.gg/SeJr7ANamW)",
+          inline: true
+        )
+        embed.add_field(name: "Tipeee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+      end
+      menu_message = event.channel.send_message(
+    '', false, nil, nil, nil, nil,
+    Discordrb::Components::View.new do |builder|
+      builder.row do |r|
+        r.string_select(custom_id: 'language_select', placeholder: 'Choose a language', max_values: 1) do |ss|
+          ss.option(label: 'English', value: '1', emoji: { name: '🇬🇧' })
+          ss.option(label: "Français", value: '2', emoji: { name: '🇫🇷' })
+        end
+      end
+    end
+  )
+  end
+  # Nettoyage après 30s
+  Thread.new do
+    sleep 30
+    menu_message.delete rescue nil
+    command_users.delete(event.user.id)
+  end
+end
+
+bot.string_select(custom_id: 'language_select') do |event|
+  unless command_users.key?(event.user.id)
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  choice = event.values.first
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] ||= {}
+
+  response_text = case choice
+  when '1'
+    server_settings['miyo_language'] = 'english'
+    "The bot will now talk in english ! Enjoy !"
+  when '2'
+    server_settings['miyo_language'] = 'french'
+    "Le bot parlera maintenant en français ! Enjoy !"
+  else
+    "Choix invalide."
+  end
+
+  save_starboard_settings(settings)
+
+  event.interaction.respond(content: response_text, ephemeral: true)
+end
+
+bot.message(with_text: '!écrire') do |event|
+  event.channel.start_typing
+
+  sleep(3)
+
+  event.respond('Voilà mon message après avoir écrit !')
+end
 
 #OUAIIIIS LE BOT IL EST ENCORE VIVANT YOUHOU
 Signal.trap('INT') do
