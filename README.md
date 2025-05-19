@@ -3,9 +3,7 @@
 ## 📌 Forewords
 
 Before any utilisation of the bot, in private or in public, please read this file.
-
 You can use this bot how you want, but please credit me. 
-
 The following are comments about the use of my bot (not yours with this code), the regulations of my bot, but also its features. If you download and host your own bot using my code, this readme will not regulate your bot, leaving you with complete freedom.
 
 - **Bot** : Miyo#1437  
@@ -37,51 +35,54 @@ We decline all responsibility for non-compliance with these rules. Sanctions may
 ## ⚙ 3 - Features  
 Miyo is primarily a **chatbot**, with several additional features.  
 
-### 📝 Main Orders  
-- ‘hug’: Give someone a hug  
-- ‘punch’: Hit someone  
-- `kiss': Kissing someone  
-- ‘trigger’: Show dissatisfaction  
+##  Interaction commands (/)
+- ‘help’ : Classic command, but it'll help you to remember some commands.
+- ‘info’ : Learn more about the bot.
 
-### 🎮 Orders for *osu! *  
-- ‘osulink’: Link your Discord account (id) to *osu! *(name of the account)  
-- ‘osuunlink’: Unbind account  
-- ‘rs’: See his last score  
-- ‘osurdm’: Get a random beatmap by difficulty  
+### Moderation commands
+- ‘welcome’ : Set welcome messages for your server and in which channel the bot will send it (for the moment, messages aren't customizable, but are randoms)
+- ‘autoban’ : Using a list of user which has already been spotted as bad, it'll ban them automatically if activated. You can also set where the message (for what reasons the user has been banned) will be sended
+- ‘language’ : You can set the language of the bot. For the moment, it isn't completed. You can participate in the translation on my discord.
+
+### 🎮 Orders for *osu!*  
+- ‘osulink’: Link your Discord account (id) to *osu!* (name of the account).  
+- ‘osuunlink’: Unbind account.  
+- ‘rs’: See his last score.
+- ‘osurdm’: Get a random beatmap by difficulty.
+
+
+## Classic commands (!)
+### 📝 Reaction commands
+- ‘hug’: Give someone a hug.
+- ‘punch’: Hit someone.
+- `kiss': Kissing someone. 
+- ‘trigger’: Show dissatisfaction.  
 
 ### 🎲 Miscellaneous  
-- ‘dice’: Roll a dice (1-6)  
-- ‘talk’: Generate a random phrase  
-
-### 🛠️​ Moderator Commands
-- ‘welcome’ : Set welcome messages for your server and in which channel the bot will send it (for the moment, messages aren't customizable, but are randoms)
-- ‘autoban’ : Using a list of user which has already been spotted as bad, it'll ban them automatically if activated. You can also set where the message (for what reasons the user has been banned) will be sended 
-
+- ‘dice’: Roll a dice (1-6).
+- ‘talk’: Generate a random phrase.
 
 ## 🤖 4 - Bot interactions  
 In addition to the commands, Miyo interacts in several ways:  
 
-- **IA integrated**: Active when you mention *Miyo* or reply to his messages.  
-- **Specific reactions**: Reacts to certain words and media types.  
-- **Reaction "feur"**: When someone ends a sentence with “quoi”, the bot automatically responds “feur”.  
+- **IA integrated**: Active when you mention Miyo, say "Miyo" or reply to her messages.  
+- **Specific reactions**: React with some words such as 'Valorant', 'Overwatch'...
+- **Reaction "feur"**: French meme ngl.  
 
 ## 🛡 5 - Bot moderation  
 Miyo has an integrated moderation system, with the following restrictions:  
 
-- Block links to known porn sites  
-- Detection and sanction of spam (automatic muting). It mute even if it's not in the same channel and it's the same message too many times (like if someone send "hey" in different channels, this person will be mute). It can save you from a token-grabbed person, which send only one time in a channel a link
-- Limiting the abuse of bot commands  
-
-These restrictions cannot be disabled at this time.  
+- Block links to known porn sites (will be changed to accept link by discord bots and be activated or not)
+- Detection and sanction of spam (automatic muting). It mute even if it's not in the same channel and it's the same message too many times (like if someone send "hey" in different channels, this person will be mute). It can save you from a token-grabbed person, which send only one time in a channel a link. (will let you to turn it on or not) 
 
 ## i 6 - Important information  
-- Miyo cannot stay online all the time, it is hosted by its creator.  
+- Since Miyo is still in development, she can "bug" sometimes. We apologise for this.
 - When offline, the commands do not work.  
 - The bot is constantly updated, some features may be changed or removed.  
 
 ---
 
-Please report any bugs or issues to **museau__**.
+Please report any bugs or issues to **museau__** on discord.
 
 ---
 
