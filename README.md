@@ -88,6 +88,7 @@ Please report any bugs or issues to **museau__** on discord.
 
 ## Acknowledgements 
 To Cyn, for helping me with some parts of the code!
+To Roxas, and his integration of Miyo is his bot [Glados](https://aperture-sciences.com/)
 
 ## Star History
 
