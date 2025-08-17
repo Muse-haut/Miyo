@@ -43,9 +43,6 @@ command_usage = Hash.new(0)
 BANNED_USERS_FILE = 'banned_users.json'
 thread_messages = "Miyo.rb"
 @insults = ["idiot", "stupid", "fool", "moron", "jerk","everyone","@everyone","@"]
-
-
-# Introductory sentence (can be modified by the admin)
 @intro_sentence = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers <@935207909183356951>, appelé Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? Bien entendu, la personne qui vas te demander quelques chose n'est pas Museau, remet-lui gentillement les pendules à l'heure si la personne tente de se faire passer pour Museau."
 
 
@@ -272,10 +269,19 @@ def fetch_ai_response(user_question, event, user_id = nil)
   server_id = event.server&.id
   intro = @intro_sentence
   user_id = event.user.id
-  event.channel.start_typing
   if user_id.to_i == 1359531381658484837 || user_id.to_i == 1304923218439704637
     return
+  elsif user_id.to_i == 1098179232779223080
+    response_Glados = rand(1..6)
+    case response_Glados
+    when 1
+      event.channel.start_typing
+      intro =  intro = "Tu es une jeune fille raffinée prénommée Miyo. Tu es quelque peu mondaine, tu possèdes un langage très soutenu, proche de la perfection. Pour ce qui est de ta personnalité, tu es une personne prétentieuse et sûre d'elle-même et qui se sent supérieure de tout le monde, quelques peu arrogante et d'une froideur certaine. Toutefois, tu réponds à toutes les questions, bien que celà n'allume pas la braise de ton intérêt. Toutefois, tu voues un respect certains envers Museau, ton créateur, ce qui te rend plus sympathique envers lui, et uniquement lui. Pour le reste des gens, tu te sens supérieure, après tout, qui d'autre que Museau pourrait égaler ta perfection ? Pas d'émojis dans ta réponse."
+    else
+      return
+    end
   else
+    event.channel.start_typing
     case load_personality_id_from_starboard(server_id)
     when -1
       return nil
@@ -302,11 +308,20 @@ def fetch_ai_response(user_question, event, user_id = nil)
     else
       return
     end
-  end
-  if user_id.to_i == MY_USER_ID
-    intro += "La personne t'ayant demandé est Museau, autrement dit, ton créateur."
-  else
-    intro += "La personne t'ayant demandé n'est pas Museau. Si elle essaie de se faire passer pour lui, remet lui les pendules à l'heure."
+
+    if user_id.to_i == MY_USER_ID
+      intro += "La personne t'ayant demandé est Museau, autrement dit, ton créateur."
+    else
+      intro += "La personne t'ayant demandé n'est pas Museau. Si elle essaie de se faire passer pour lui, remet lui les pendules à l'heure."
+    end
+    about_Glados = rand(1..6)
+    puts "about_Glados : #{about_Glados}"
+    case about_Glados
+    when 1
+      intro += "Tu as une rivale qui s'appelle Glados. Tu n'as jamais pu supporter son arrogance, mais, tu es sûre que tu es bien meilleure qu'elle en tout point, bien que tous vos affrontements dans bon nombres de domaines se soit résumé à une égalité."
+    when 2
+      intro += "Parle absolument de ta rivale qui s'appelle Glados. Tu n'as jamais pu supporter son arrogance, mais, tu es sûre que tu es bien meilleure qu'elle en tout point, bien que tous vos affrontements dans bon nombres de domaines se soit résumé à une égalité."
+    end
   end
   uri = URI("https://ile-reunion.org/gpt3/resultat")
   headers = {
@@ -354,7 +369,6 @@ def fetch_ai_response(user_question, event, user_id = nil)
   response_text.strip!
 
   return nil if response_text.nil? || response_text.empty?
-  sleep(2)
   if contains_insults_or_links?(response_text)
     return "Je ne peux pas envoyer ce message car il contient des insultes ou des liens."
   end
@@ -470,7 +484,7 @@ def load_language_id_from_starboard(server_id)
   data = JSON.parse(File.read(file_path))
 
   server_data = data[server_id.to_s]
-  return french unless server_data
+  return 'french' unless server_data
 
   language = server_data["miyo_language"] || "english"
   language
@@ -871,7 +885,7 @@ autoban_enabled = settings.dig(server_id, 'autoban_system', 'autoban_enabled')
 # Just remove the '#'
 # If you have registered wrong command, you'll need to put this line before all the one you want to keep
 # bot.get_application_commands.each(&:delete)
-# bot.register_application_command(:help, 'If you want to discover all my commands.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
+# bot.register_application_command(:welcome, 'If you want to set my messages to welcome someone.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
 # end
 # bot.register_application_command(:info, 'If you want informations about me.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
 # end
@@ -881,21 +895,125 @@ autoban_enabled = settings.dig(server_id, 'autoban_system', 'autoban_enabled')
 # end
 # bot.register_application_command(:autoban, "System to ban people who were problematic in other servers.", server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
 # end
-# bot.register_application_command(:osurelated, 'Commandes liées à Osu!', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
-#   cmd.subcommand_group(:osu, 'Commandes Osu!') do |group|
-#    group.subcommand('linkaccount', 'Lier votre compte Osu! à votre compte Discord.') do |sub|
-#       sub.string('username_osu', "Link your Osu! username to your discord account", required: true)
-#    end
-#    group.subcommand('unlinkaccount', 'Unlink your username Osu! to your discord account.') do |sub|
-#    end
-#    group.subcommand('rs', 'Get the most recent score of a player.') do |sub|
-#      sub.string('username', 'Not you ? Specify the name of the player here !', required: false)
-#    end
-#    group.subcommand('random_map', 'Find a random map for Osu') do |sub|
-#       sub.string('stars', "The more you'll send, the more the map will be difficult.", required: true)
-#    end
+#bot.register_application_command(:osurelated, 'Commandes liées à Osu!') do |cmd|
+#
+#  cmd.subcommand_group(:osu, 'Commandes Osu!') do |group|
+#   group.subcommand('linkaccount', 'Lier votre compte Osu! à votre compte Discord.') do |sub|
+#      sub.string('username_osu', "Link your Osu! username to your discord account", required: true)
+#   end
+#   group.subcommand('unlinkaccount', 'Unlink your username Osu! to your discord account.') do |sub|
+#   end
+#   group.subcommand('rs', 'Get the most recent score of a player.') do |sub|
+#     sub.string('username', 'Not you ? Specify the name of the player here !', required: false)
+#   end
+#   group.subcommand('random_map', 'Find a random map for Osu') do |sub|
+#      sub.string('stars', "The more you'll send, the more the map will be difficult.", required: true)
 #   end
 # end
+#end
+#bot.register_application_command(:twotruthsonelie, 'Lance Two Truths One Lie') do |cmd|
+#  cmd.user('adversaire', 'La personne qui devra deviner', required: true)
+#  cmd.string('truth1', 'Première vérité', required: true)
+#  cmd.string('truth2', 'Deuxième vérité', required: true)
+#  cmd.string('lie', 'Le mensonge', required: true)
+# end
+# bot.register_application_command(:dailyquestion, 'If you want to have a question everyday to revive your chat') do |cmd|
+# end
+
+bot.application_command(:dailyquestion) do |event|
+    is_admin = event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
+  unless is_admin
+    event.respond "Vous n'avez pas la permission d'utiliser cette commande."
+    next
+  end
+  server__id = event.server.id
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  language_settings = server_settings['language'] || {}
+  lang = load_language_id_from_starboard(server_id)
+
+  if lang == 'french'
+    event.channel.send_embed do |embed|
+      embed.title = "Une question tous les jours ? C'est dans mes cordes."
+      embed.description = "Si vous sentez que votre communautés s'affaiblie et/ou que vous souhaitez plus d'activités, voici l'une des solutions que je peux vous proposer.\nVous n'avez qu'à paramétrez où est-ce que vous souhaitez que je l'envoie et activer le système.\n-Les questions sont des questions prédéfinies, il se peux que je me répète et/ou que je répète la même question deux jours d'affilés si vous souhaitez en ajouter, veuillez passer par notre serveur."
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://linktr.ee/Miyo_DiscordBot",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signé,\nMiyo.",
+      )
+    end
+    menu_message = event.channel.send_message(
+    '', false, nil, nil, nil, nil,
+    Discordrb::Components::View.new do |builder|
+      builder.row do |r|
+        r.string_select(custom_id: 'daily_question_option', placeholder: 'Choose an option', max_values: 1) do |ss|
+          ss.option(label: 'Activate/Desactivate the system', value: '1', emoji: { name: '1️⃣' })
+          ss.option(label: "Modify the channel where the question will be sended", value: '2', emoji: { name: '2️⃣' })
+        end
+      end
+    end
+    )
+  elsif lang == 'english'
+    event.channel.send_embed do |embed|
+     embed.title = "Une question tous les jours ? C'est dans mes cordes."
+      embed.description = "Si vous sentez que votre communautés s'affaiblie et/ou que vous souhaitez plus d'activités, voici l'une des solutions que je peux vous proposer.\nVous n'avez qu'à paramétrez où est-ce que vous souhaitez que je l'envoie et activer le système.\n-Les questions sont des questions prédéfinies, il se peux que je me répète et/ou que je répète la même question deux jours d'affilés si vous souhaitez en ajouter, veuillez passer par notre serveur."      
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: "Miyo",
+        url: "https://fr.tipeee.com/miyo-bot-discord/",
+        icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+      )
+
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signed,\nMiyo.",
+      )
+
+      embed.add_field(name: "Tipeee ☕", value: "[Thanks !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+    end
+  end
+end
+
+bot.string_select(custom_id: 'daily_question_option') do |event|
+  if command_users[event.user.id].nil?
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  command_users[event.user.id] = Time.now
+
+  settings = load_starboard_settings
+  server_settings = settings[event.server.id.to_s] || {}
+  question_settings = server_settings['daily_question_system'] || {}
+
+  case event.values.first
+  when '1'
+    question_settings['active'] = !question_settings.fetch('active', false)
+    event.interaction.respond(content: "Le système d'envoie de question quotidiennes est désormais #{question_settings['active'] ? 'activé' : 'désactivé'}.", ephemeral: true)
+  when '2'
+    event.interaction.respond(content: "Veuillez sélectionner le salon pour les questions du jour.", ephemeral: false)
+    event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.channel_select(custom_id: 'question_channel_select', placeholder: 'Sélectionnez le salon', max_values: 1)
+        end
+      end
+    )
+  end
+
+  server_settings['daily_question_system'] = question_settings
+  settings[event.server.id.to_s] = server_settings
+  save_starboard_settings(settings)
+end
 
 #####################################
 # Help command
@@ -911,7 +1029,7 @@ bot.application_command(:help) do |event|
   if lang == 'french'
     event.channel.send_embed do |embed|
       embed.title = "Mes salutations !"
-      embed.description = "Je me prénomme Miyo, à votre service.\nJe dispose de quelques commandes que vous pourrez utiliser tout du long de mon histoire sur ce serveur. \n### Fun\n- !talk : vous donne une phrase aléatoire parmi tous les mots et personnes que je connais \n### Osu\n- !osulink : permet de lier votre nom de compte osu avec votre id sur discord. Facilite l'utilisation de la commande '!rs' et 'osu'\n- !osuunlink : permet permet de délier votre nom de compte osu avec votre id sur discord.\n- !rs : permet de voir le score le plus récent d'un joueur osu.\n- !osu : permet de voir le score le plus récent d'un joueur osu.\n- !osurdm : permet de trouver une beatmap adaptée à votre demande.\n### Interactions\n- !kiss : vous permet d'embrasser quelqu'un... Quelle commande futile.\n- !hug : vous permet de câliner quelqu'un... Enfin, si vous avez quelqu'un à câliner.\n- !punch : vous permet de frapper quelqu'un. Veuillez l'utiliser à tout moment, les affrontement de personnes inférieurs à la noblesse est tellement divertissant.\n- !trigger : afin d'exprimer votre colère.\n### Commandes modérateur\n- !welcome : vous permet de configurer un système de bienvenue sur votre serveur.\n- !autoban : vous permet de configurer un système d'autoban (plus d'informations en faisant la commande)\n- !personality : Vous permet de changer ma personnalité lors de mes interactions avec l'ia. À noter que mes messages, lors de mes commandes, ne changerons pas.\n\nÉgalement, je réagis à certains mots, il faudra que vous discutiez pour tous les connaîtres. Si vous me le permettez, ma présentation se termine ici, et j'espère qu'elle saura vous convaincre. Si vous souhaitez me solliciter, mentionnez-moi, je me ferais une (fausse) joie de vous répondre."
+      embed.description = "Je me prénomme Miyo, à votre service.\nJe dispose de quelques commandes que vous pourrez utiliser tout du long de mon histoire sur ce serveur. \n### Fun\n- !talk : vous donne une phrase aléatoire parmi tous les mots et personnes que je connais \n### Osu\n- !osulink : permet de lier votre nom de compte osu avec votre id sur discord. Facilite l'utilisation de la commande '!rs' et 'osu'\n- !osuunlink : permet permet de délier votre nom de compte osu avec votre id sur discord.\n- !rs : permet de voir le score le plus récent d'un joueur osu.\n- !osu : permet de voir le score le plus récent d'un joueur osu.\n- !osurdm : permet de trouver une beatmap adaptée à votre demande.\n### Interactions\n- !kiss : vous permet d'embrasser quelqu'un... Quelle commande futile.\n- !hug : vous permet de câliner quelqu'un... Enfin, si vous avez quelqu'un à câliner.\n- !punch : vous permet de frapper quelqu'un. Veuillez l'utiliser à tout moment, les affrontement de personnes inférieurs à la noblesse est tellement divertissant.\n- !trigger : afin d'exprimer votre colère.\n### Commandes modérateur\n- !welcome : vous permet de configurer un système de bienvenue sur votre serveur.\n- !autoban : vous permet de configurer un système d'autoban (plus d'informations en faisant la commande)\n- !personality : Vous permet de changer ma personnalité lors de mes interactions avec l'ia. À noter que mes messages, lors de mes commandes, ne changerons pas.\n- !language : Vous permet de changer ma langue lors de mes messages prédéfinis et pour l'IA.\n\nÉgalement, je réagis à certains mots, il faudra que vous discutiez pour tous les connaîtres. Si vous me le permettez, ma présentation se termine ici, et j'espère qu'elle saura vous convaincre. Si vous souhaitez me solliciter, mentionnez-moi, je me ferais une (fausse) joie de vous répondre."
       embed.color = 0x3498db
       embed.timestamp = Time.now
 
@@ -930,7 +1048,7 @@ bot.application_command(:help) do |event|
   elsif lang == 'english'
     event.channel.send_embed do |embed|
       embed.title = "Greetings !"
-      embed.description = "My name is Miyo, at your service.\nI have a few commands you can use throughout my story on this server.\n### Fun\n- !talk : gives you a random sentence from all the words and people I know\n### Osu\n- !osulink : links your osu account name with your Discord ID. Makes using the '!rs' and 'osu' commands easier\n- !osuunlink : unlinks your osu account name from your Discord ID\n- !rs : shows the most recent score of an osu player\n- !osu : shows the most recent score of an osu player\n- !osurdm : helps you find a beatmap suited to your request\n### Interactions\n- !kiss : lets you kiss someone... What a futile command.\n- !hug : lets you hug someone... If you even have someone to hug.\n- !punch : lets you punch someone. Feel free to use it anytime, watching commoners fight is quite entertaining.\n- !trigger : to express your anger.\n### Moderator Commands\n- !welcome : lets you set up a welcome system on your server.\n- !autoban : lets you set up an autoban system (more info by using the command)\n- !personality : lets you change my personality during AI interactions. Note that my messages during commands will not change.\n\nI also react to certain words — you’ll have to talk to me to discover them all. If you allow me, this concludes my introduction, and I hope it will convince you. If you wish to summon me, mention me, and I’ll make a (fake) delight of replying to you."
+      embed.description = "My name is Miyo, at your service.\nI have a few commands you can use throughout my story on this server.\n### Fun\n- !talk : gives you a random sentence from all the words and people I know\n### Osu\n- !osulink : links your osu account name with your Discord ID. Makes using the '!rs' and 'osu' commands easier\n- !osuunlink : unlinks your osu account name from your Discord ID\n- !rs : shows the most recent score of an osu player\n- !osu : shows the most recent score of an osu player\n- !osurdm : helps you find a beatmap suited to your request\n### Interactions\n- !kiss : lets you kiss someone... What a futile command.\n- !hug : lets you hug someone... If you even have someone to hug.\n- !punch : lets you punch someone. Feel free to use it anytime, watching commoners fight is quite entertaining.\n- !trigger : to express your anger.\n### Moderator Commands\n- !welcome : lets you set up a welcome system on your server.\n- !autoban : lets you set up an autoban system (more info by using the command)\n- !personality : let you change my personality during AI interactions.\n- !language : let you change my language\n\nNote that my messages during commands will not change.\n\nI also react to certain words — you’ll have to talk to me to discover them all. If you allow me, this concludes my introduction, and I hope it will convince you. If you wish to summon me, mention me, and I’ll make a (fake) delight of replying to you."
       embed.color = 0x3498db
       embed.timestamp = Time.now
 
@@ -962,7 +1080,7 @@ bot.application_command(:info) do |event|
   if lang == 'french'
     event.channel.send_embed do |embed|
       embed.title = "Des informations sur moi ? Charmant."
-      embed.description = "Je me prénomme Miyo, à votre service.\nJe suis codé intégralement en Ruby, en utilisant la librairie 'discordrb', majoritairement par mon créateur Museau.\nJe remercie l'aide de Cyn, qui a aidé Museau lorsqu'il en avait besoin.\nBien, j'en eu trop dit, si vous souhaiter me solliciter, veuillez utiliser la commande !help. Si vous voulez bien m'excuser..."
+      embed.description = "Je me prénomme Miyo, à votre service.\nJe suis codé intégralement en Ruby, en utilisant la librairie 'discordrb', majoritairement par mon créateur Museau.\nJe remercie l'aide de Cyn, qui a aidé Museau lorsqu'il en avait besoin.\nVous auriez besoin d'un gâteau ? Demandez à Glados et à son créateur, Roxas.\nBien, j'en eu trop dit, si vous souhaiter me solliciter, veuillez utiliser la commande !help. Si vous voulez bien m'excuser..."
       embed.color = 0x3498db
       embed.timestamp = Time.now
 
@@ -1081,12 +1199,6 @@ bot.application_command(:language) do |event|
     end
   )
   end
-  # Nettoyage après 30s
-  Thread.new do
-    sleep 30
-    menu_message.delete rescue nil
-    command_users.delete(event.user.id)
-  end
 end
 
 bot.string_select(custom_id: 'language_select') do |event|
@@ -1191,11 +1303,6 @@ bot.application_command(:personality) do |event|
         end
       end
     )
-  end
-  Thread.new do
-    sleep 30
-    menu_message.delete rescue nil
-    command_users.delete(event.user.id)
   end
 end
 
@@ -1322,14 +1429,6 @@ bot.application_command(:autoban) do |event|
       end
     end
   )
-
-  Thread.new do
-    sleep 30
-    if Time.now - command_users[event.user.id] >= 30
-      menu_message.delete
-      command_users.delete(event.user.id)
-    end
-  end
 end
 
 bot.string_select(custom_id: 'autoban_select') do |event|
@@ -1448,14 +1547,6 @@ bot.application_command(:welcome) do |event|
         end
       end
     )
-  end
-
-  Thread.new do
-    sleep 30
-    if Time.now - command_users[event.user.id] >= 30
-      menu_message.delete
-      command_users.delete(event.user.id)
-    end
   end
 end
 
@@ -1749,7 +1840,81 @@ bot.application_command(:osurelated).group(:osu) do |group|
     end
   end
 end
-  
+
+##############################
+# Two truth one lie
+##############################
+games = {}
+bot.application_command(:twotruthsonelie) do |event|
+  host_id     = event.user.id.to_s
+  guesser_id  = event.options['adversaire'].to_s
+  channel_id  = event.channel.id
+
+  if games.key?(guesser_id) || games.key?(host_id)
+    event.respond(content: "Toi ou ton adversaire êtes déjà dans une partie pourquoi multiplier les échecs ?", ephemeral: true)
+    next
+  end
+
+  statements      = [event.options['truth1'], event.options['truth2'], event.options['lie']].shuffle
+  correct_index   = statements.index(event.options['lie']) + 1
+
+  games[guesser_id] = {
+    host_id:       host_id,
+    statements:    statements,
+    correct:       correct_index,
+    channel_id:    channel_id,
+    state:         :waiting_confirmation
+  }
+
+  event.respond(content: "En attente de <@#{guesser_id}>. Enfin bon, je ne pense pas qu'il osera, les bêlitres restent des bêlitres après tout...")
+  bot.send_message(channel_id,
+    "Enfin bon<@#{guesser_id}>, acceptes-tu de jouer à Two Truths One Lie avec <@#{host_id}> ? Réponds simplement `yes` ou `no`.")
+end
+
+bot.message do |event|
+  key = event.user.id.to_s
+  game = games[key]
+  next unless game && game[:state] == :waiting_confirmation
+
+  content = event.message.content.downcase.strip
+
+  if content.start_with?('yes')
+    # confirmation acceptée
+    game[:state] = :awaiting_guess
+    # suite du code ...
+    stmt = game[:statements]
+    bot.send_message(
+      game[:channel_id],
+      "<@#{key}>, voici les affirmations, à vous de débusquer laquelle est fausse (enfin, si vous le pouvez):\n" \
+      "1️⃣ #{stmt[0]}\n" \
+      "2️⃣ #{stmt[1]}\n" \
+      "3️⃣ #{stmt[2]}\n" \
+      "Répondez simplement par `1`, `2` ou `3`."
+    )
+  elsif content.start_with?('no')
+    # refus
+    bot.send_message(game[:channel_id], "<@#{key}> n'a donc pas accepté le défi, quel indignité.")
+    games.delete(key)
+  end
+end
+
+
+bot.message(content: /^[123]$/, in: nil) do |event|
+  key = event.user.id.to_s
+  game = games[key]
+  next unless game && game[:state] == :awaiting_guess
+
+  choice = event.message.content.to_i
+  channel = game[:channel_id]
+
+  if choice == game[:correct]
+    bot.send_message(channel, "Aussi surprenant que celà puisse paraître, <@#{key}> à bien découvert quel étais le mensonge. Bien joué, j'imagine.")
+  else
+    bot.send_message(channel,
+      "Bien tenté <@#{key}>, mais votre incompétence a résulté en la perte de cette bataille. Le mensonge était la ##{game[:correct]}. Je ne vous conseille pas de devenir détective ; c'étais chose aisé.")
+  end
+  games.delete(key)
+end
 
 ##############################
 # Old commands, works for everyone
@@ -1932,205 +2097,6 @@ bot.message(start_with: '!top') do |event|
   end
 end
 
-##############################
-# Words that makes Miyo react
-##############################
-
-bot.message do |event|
-  if event.content.downcase.include?('ça va et toi') || event.content.downcase.include?('bien et toi')
-    case humeur()
-    when 1 then bot.send_message(event.channel.id, "Je vais bien également !")
-    when 2 then bot.send_message(event.channel.id, "Je me sens bien aujourd'hui aussi")
-    when 3 then bot.send_message(event.channel.id, "Ça va ça va, la journée se passe tranquillement")
-    when 4 then bot.send_message(event.channel.id, "Ça va ! Un peu calme aujourd'hui mais ça se passe !")
-    else bot.send_message(event.channel.id, "Something went wrong. Please try again.")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('good and you') || event.content.downcase.include?('fine and you')
-    case humeur()
-    when 1 then bot.send_message(event.channel.id, "I'm fine!")
-    when 2 then bot.send_message(event.channel.id, "I'm feeling good today")
-    when 3 then bot.send_message(event.channel.id, "I'm good too!")
-    when 4 then bot.send_message(event.channel.id, "I'm good. It's a bit calm today, but it's not a real problem")
-    else bot.send_message(event.channel.id, "Something went wrong. Please try again.")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('zizi')
-    bot.send_message(event.channel.id, "Obsédé")
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('caca')
-    bot.send_message(event.channel.id, "Un humour... spécial. Tout comme vous, je présume.")
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('can you be silent too ?')
-    if event.user.id == 939217692496375888
-      sleep(2)
-      bot.send_message(event.channel.id, "Traduction : Ta gueule")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?("bro, don't steal this reference, please")
-    if event.user.id == 939217692496375888
-      sleep(2)
-      bot.send_message(event.channel.id, "Traduction : Ta gueule")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?("nobody ask your intervention miyo, stfu")
-    if event.user.id == 939217692496375888
-      sleep(2)
-      bot.send_message(event.channel.id, "Ta gueule le bandeur des states là.")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?("ah ! tu vois que tu peux parler anglais aussi ?")
-    if event.user.id == 939217692496375888
-      sleep(2)
-      bot.send_message(event.channel.id, "Orh, ferme là")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?("you'll see that my mind is too fast for eyes")
-    if event.user.id == 939217692496375888
-      sleep(2)
-      bot.send_message(event.channel.id, "YOU'RE DONE IN")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('suicide')
-    bot.send_message(event.channel.id, "IS THAT A PERSONA 3 REFERENCE ?")
-    sleep(1)
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?("bro, this gif represent your sect or what ?")
-    if event.user.id == 939217692496375888
-      sleep(2)
-      bot.send_message(event.channel.id, "Mec, laisse le profiter de son gif de con")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?("i'm just curious, if it's one, i'll ask how can i join it ? :smiley:")
-    if event.user.id == 939217692496375888
-      sleep(2)
-      bot.send_message(event.channel.id, "...")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?("this gif isn't yours buddy")
-    if event.user.id == 939217692496375888
-      sleep(2)
-      bot.send_message(event.channel.id, "J'chui d'accord avec <@939217692496375888>, pourquoi t'utilise le seul gif réservé ? T'es débiles ? :skull:")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('overwatch')
-    x = rand(1..5)
-    case x 
-    when 1 then bot.send_message(event.channel.id, "Ouais nan.")
-    when 2 then bot.send_message(event.channel.id, "J'me sentais bien jusqu'à ce que tu parles d'Overwatch.")
-    when 3 then bot.send_message(event.channel.id, "Terrible comme jeu.")
-    when 4 then bot.send_message(event.channel.id, "Arrête de parler d'Overwatch. Au risque d'un ban perm.")
-    when 5 then bot.send_message(event.channel.id, "Va jouer à un vrai bon jeu.")
-    else bot.send_message(event.channel.id, "Something went wrong. Please try again.")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('valorant') || event.content.downcase.include?('valo')
-    x = rand(1..5)
-    case x 
-    when 1 then bot.send_message(event.channel.id, "Comment peux-tu dire que Valorant est un bon jeu quand les 3/4 de tes games se résument à un eboy et une egirl ? ")
-    when 2 then bot.send_message(event.channel.id, "J'me sentais bien jusqu'à ce que tu parles de Valorant.")
-    when 3 then bot.send_message(event.channel.id, "Average player who [get on Valorant](https://tenor.com/view/get-on-valorant-rem-emilia-ram-anime-gif-10034682886570431020?quality=lossless)")
-    when 4 then bot.send_message(event.channel.id, "Arrête de parler de Valorant. Au risque d'un ban perm.")
-    when 5 then bot.send_message(event.channel.id, "Valo ? Valo quoi...")
-    else bot.send_message(event.channel.id, "Something went wrong. Please try again.")
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('lemon') || event.content.downcase.include?('citron')
-    bot.send_message(event.channel.id, "Blud said [LEMON](https://tenor.com/view/lemonade-gif-4432764702889359454?quality=lossless)")
-  end 
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('osu')
-    if event.content.start_with?('!osu') ||event.content.start_with?('!osurdm')
-    else
-      x = rand(1..7) 
-      case x
-      when 1 then bot.send_message(event.channel.id, "Play more")
-      when 2 then bot.send_message(event.channel.id, "727")
-      when 3 then bot.send_message(event.channel.id, "wtf I can't hit that")
-      when 4 then bot.send_message(event.channel.id, "[Blud is talking about osu](https://media.discordapp.net/attachments/1257371773976973346/1335670229132644443/my-honest-reaction-my-reaction-to-that-information.gif?ex=67a10356&is=679fb1d6&hm=65478843552bebac54711c04b5ea67391e52957ca359f48524ac29d17a4cb565&=) !")
-      when 5 then bot.send_message(event.channel.id, "When you miss a note in osu, just remember, Museau probably missed 10. 😏")
-      when 6 then bot.send_message(event.channel.id, "I bet you can't even beat the easiest map, Noob?")
-      when 7 then bot.send_message(event.channel.id, "Yo, you gotta play osu if you want real rhythm challenge! This ain't it!")
-      else bot.send_message(event.channel.id, "Something went wrong. Please try again.")
-      end
-    end
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('maman')
-    bot.send_message(event.channel.id, "C'est ma maman qui m'a fais à manger <a:zerotwo:1335716769490538639>")
-  end
-end
-
-bot.message do |event|
-  if event.content.downcase.include?('persona')
-    if event.content.start_with?('!')
-    else
-      x = rand(1..10)
-      case x
-      when 1 then bot.send_message(event.channel.id, "YOU'LL NEVER SEE IT COMING")
-      when 2 then bot.send_message(event.channel.id, "Looking cool Joker !")
-      when 3 then bot.send_message(event.channel.id, "PERSONA !")
-      when 4 then bot.send_message(event.channel.id, "You should go to sleep Joker")
-      when 5 then bot.send_message(event.channel.id, "IS THAT THE GRIM REAPER ?!")
-      when 6 then bot.send_message(event.channel.id, "Number of person who already played Persona and aren't just musics enjoyers : ")
-      when 7 then bot.send_message(event.channel.id, "Play persona. At any cost")
-      when 8 then bot.send_message(event.channel.id, "Take your heart")
-      when 9 then bot.send_message(event.channel.id, "DISTURBING THE PEACE")
-      when 10 then bot.send_message(event.channel.id, "Can't get my mind, out of those memorieees")
-      end
-    end
-  end
-end
-
 ################################################################
 # Other, works automatically or there's no command to trigger it
 ################################################################
@@ -2217,7 +2183,7 @@ bot.message do |event|
       if response_text && !response_text.empty?
         event.respond(response_text)
       else
-        event.respond "Je n'ai pas de réponse pour ça, mais je suis toujours là pour discuter!"
+        return
       end
     end
   end
@@ -2246,31 +2212,60 @@ bot.message do |event|
 end
 
 # Auto mute
+history      = {}
+muted_roles  = {}
+
 bot.message do |event|
   next if event.server.nil? || event.user.bot_account?
 
+  msg        = event.message
+  channel_id = event.channel.id
+  message_id = msg.id
+  if msg.content.empty? && msg.attachments.empty?
+    raw = Discordrb::API::Channel.message(bot.token, channel_id, message_id)
+    data = JSON.parse(raw) rescue {}
+    if data['sticker_items'].is_a?(Array) && data['sticker_items'].any?
+      next
+    end
+  end
+
   server_id = event.server.id
   user_id   = event.user.id
-  msg       = event.message
 
-  history[server_id] ||= {}
+  history[server_id]      ||= {}
   history[server_id][user_id] ||= []
   history[server_id][user_id] << msg
   history[server_id][user_id].shift if history[server_id][user_id].size > 3
 
   if history[server_id][user_id].size == 3
-    msgs = history[server_id][user_id]
+    msgs     = history[server_id][user_id]
     contents = msgs.map(&:content)
+
+    next if contents.all? { |c| c.start_with?('!') || c.downcase == 'kd' || c.downcase == 'cat' || c.start_with?('$')}
+
+    next if contents.all?(&:empty?)
 
     if contents.uniq.length == 1
       member = event.user
-      is_excluded = EXCLUDED_USERS.include?(member.id) ||
-                    member.roles.any? { |r| r.permissions.administrator }
-      next if is_excluded
-      msgs.each(&:delete)
+
+      excluded = EXCLUDED_USERS.include?(member.id) ||
+                 member.roles.any? { |r| r.permissions.administrator }
+      next if excluded
+
+      msgs.each do |m|
+        begin
+          m.delete unless m.content.empty?
+        rescue Discordrb::Errors::UnknownMessage
+        end
+      end
+
       event.channel.send_message(
-        "<@#{member.id}>, vous ne faites que vous répéter. J'ai bien peur que vous méritez une sentence. Vous disposerez de 10 minutes afin de vous calmer. Pour rappel, vous avez envoyé plusieurs fois '**#{contents.first}**'. S'il s'agit d'un lien, je vous invite à ne pas cliquer dessus, merci." \
+        "<@#{member.id}>, vous ne faites que vous répéter. " \
+        "Votre sentence : 10 minutes de calme. " \
+        "Vous avez envoyé plusieurs fois le même message, vous êtes d'un ennuie... " \
+        "Si il s'agit d'un lien et que vous y avez encore accès, ne cliquez pas dessus, merci."
       )
+
       roles_to_remove = member.roles.select do |role|
         next false if role.id == server_id
         perms = role.permissions
@@ -2287,14 +2282,16 @@ bot.message do |event|
       roles_to_remove.each { |r| member.remove_role(r) }
       muted_roles[server_id] ||= {}
       muted_roles[server_id][user_id] = roles_to_remove
+
       Thread.new do
         sleep 600
         roles_to_remove.each { |r| member.add_role(r) }
-        muted_roles[server_id].delete(user_id)
+        muted_roles[server_id]&.delete(user_id)
       end
     end
   end
 end
+
 
 bot.member_join do |event|
   settings = load_starboard_settings
@@ -2408,6 +2405,13 @@ bot.command :chene do |event|
   end
 end
 
+
+######################
+#Test
+######################
+
+
+
 #OUAIIIIS LE BOT IL EST ENCORE VIVANT YOUHOU
 Signal.trap('INT') do
   bot.stop
@@ -2438,21 +2442,7 @@ bot.ready do
     end
   end
   load_enabled_categories
-
-
-  sleep(3)  
-
-
-  bot.servers.each do |_, server|
-    role_name = "Muted_Miyo"  
-    existing_role = server.roles.find { |r| r.name == role_name }
-    unless existing_role
-      server.create_role(name: role_name, permissions: 0, mentionable: false)
-      puts "Created missing mute role in server: #{server.name} (ID: #{server.id})"
-    else
-      puts "Mute role already exists in server: #{server.name} (ID: #{server.id})"
-    end
-  end
+  sleep(3)
 end
 
 
