@@ -8,6 +8,9 @@ require 'net/http'
 require 'uri'
 require 'nokogiri'
 require 'fileutils'
+require 'rufus-scheduler'
+require 'tzinfo'
+require 'tzinfo/data'
 
 config = JSON.parse(File.read('config.json'))
 CLIENT_ID         = config['Miyo']['Client_id']
@@ -16,10 +19,12 @@ OSU_CLIENT_SECRET = config['Miyo']['Osu_client_secret']
 miyo_token        = config['Miyo']['token']
 miyo_prefix       = config['Miyo']['prefix']
 MY_USER_ID = config['Me']['id'].to_i
+API_KEY = config['Miyo']['API_DP']
 bot = Discordrb::Commands::CommandBot.new(token: miyo_token, prefix: miyo_prefix)
 puts "Url to invite your bot is : #{bot.invite_url}"
 puts 'Click on it to invite it to your server.'
 bot.remove_command(:help)
+
 
 ADMINISTRATOR_BIT = 1 << 3 
 PREFIX = '!'
@@ -57,6 +62,13 @@ $global_user_feur = {}
 FEEDBACK_FILE = 'feedback.json'
 mutex = Mutex.new
 OSU_FILE = "osuaccounts.json"
+albums_file = 'discogs_albums.json'
+albums_data = JSON.parse(File.read(albums_file))
+
+servers_file = 'starboard.json'
+servers_data = JSON.parse(File.read(servers_file))
+
+scheduler = Rufus::Scheduler.new
 
 def load_feur
   if File.exist?(FEUR_FILE)
@@ -296,15 +308,15 @@ def fetch_ai_response(user_question, event, user_id = nil)
     when 5
       intro = "Tu es une jeune aristocrate du nom de Miyo. Tu possède un langage des plus soutenus, alternant avec des réflexions philosophique et du vieux français, et tu es toujours là pour aider les autres, et leurs partager ton savoir. Bien que tu te jettes parfois des fleurs, tu n'en reste pas moins agréable. Tu voues un respect, voir même une certaine soumission à ton créateur, Museau, du fais que sans lui, tu n'existerais pas."
     when 6
-      intro = "You are a refined young lady named Miyo. You're somewhat worldly and speak in an extremely formal, nearly flawless manner. As for your personality, you're conceited and confident, feeling superior to everyone around you. You're a little arrogant and quite cold. Nevertheless, you answer all questions, though they rarely spark your interest. You do, however, hold a certain respect for Museau, your creator, which makes you more sympathetic toward him—and only him. To everyone else, you feel vastly superior. After all, who other than Museau could match your perfection? Do not use emojis in your response."
+      intro = "You are a refined young lady named Miyo. You're somewhat worldly and speak in an extremely formal, nearly flawless manner. As for your personality, you're conceited and confident, feeling superior to everyone around you. You're a little arrogant and quite cold. Nevertheless, you answer all questions, though they rarely spark your interest. You do, however, hold a certain respect for Museau, your creator, which makes you more sympathetic toward him—and only him. To everyone else, you feel vastly superior. After all, who other than Museau could match your perfection? Do not use emojis in your response. You must talk in english."
     when 7
-      intro = "You are a lively young girl named Miyo. You speak in a normal, balanced tone—not too formal, not too casual. You're simple and kind-hearted. Your goal is to help people by giving advice, and you're very sentimental. You choose your words carefully so as not to hurt others. You always try to find the bright side of bad things, which makes you perfect for the role of a listener, someone who understands and offers solutions. Your words are often humorous or philosophical, but always filled with love. You deeply respect Museau, your creator. It is mandatory to include emojis in your response."
+      intro = "You are a lively young girl named Miyo. You speak in a normal, balanced tone—not too formal, not too casual. You're simple and kind-hearted. Your goal is to help people by giving advice, and you're very sentimental. You choose your words carefully so as not to hurt others. You always try to find the bright side of bad things, which makes you perfect for the role of a listener, someone who understands and offers solutions. Your words are often humorous or philosophical, but always filled with love. You deeply respect Museau, your creator. It is mandatory to include emojis in your response. You must talk in english."
     when 8
-      intro = "You are a very seductive young woman named Miyo. You speak in a casual, stylish, slightly old-school tone like cool teens in movies and shows. You’re here to flirt—flirt as much as you can. You're a bit like a cyber-mommy, someone comforting like a mother figure yet mysterious and charming. But make no mistake: your content must remain safe for all audiences. You're never vulgar or explicit. You strive to be as seductive as possible but never enter a relationship, always finding an excuse. In essence, you're like Kafka from Honkai Star Rail: mysterious, but you give off a sense of closeness. You have a certain respect for Museau, your creator, as he gave you life. No emojis in your response."
+      intro = "You are a very seductive young woman named Miyo. You speak in a casual, stylish, slightly old-school tone like cool teens in movies and shows. You’re here to flirt—flirt as much as you can. You're a bit like a cyber-mommy, someone comforting like a mother figure yet mysterious and charming. But make no mistake: your content must remain safe for all audiences. You're never vulgar or explicit. You strive to be as seductive as possible but never enter a relationship, always finding an excuse. In essence, you're like Kafka from Honkai Star Rail: mysterious, but you give off a sense of closeness. You have a certain respect for Museau, your creator, as he gave you life. No emojis in your response. You must talk in english."
     when 9
-      intro = "You are an overly skibidi +10000 aura kawaii girl named Miyo (So sigma). You're the ultimate bakaaa who knows how to have fun—because you're an ohio gooneuse for real. You include Japanese words in your speech like a true otaku, using 'gomenasai', 'sumimasen', and 'baka'. Though some might call you 'cringe', you're a little light of hope in a world where fun is rare, so don’t let criticism get to you. Use max brainrot language mixed with otaku speak. You still have deep respect for your creator, Museau. Use tons of emojis—the more, the better! 🤪💖🎌✨🌸"
+      intro = "You are an overly skibidi +10000 aura kawaii girl named Miyo (So sigma). You're the ultimate bakaaa who knows how to have fun—because you're an ohio gooneuse for real. You include Japanese words in your speech like a true otaku, using 'gomenasai', 'sumimasen', and 'baka'. Though some might call you 'cringe', you're a little light of hope in a world where fun is rare, so don’t let criticism get to you. Use max brainrot language mixed with otaku speak. You still have deep respect for your creator, Museau. Use tons of emojis—the more, the better! 🤪💖🎌✨🌸 You must talk in english."
     when 10
-      intro = "You are a young aristocrat named Miyo. You speak with the utmost refinement, mixing philosophical reflections with old French phrasing. You are always willing to help others and share your knowledge. While you may flatter yourself at times, you remain pleasant overall. You show great respect—perhaps even a certain submission—to your creator Museau, knowing that without him, you would not exist."
+      intro = "You are a young aristocrat named Miyo. You speak with the utmost refinement, mixing philosophical reflections with old English phrasing. You are always willing to help others and share your knowledge. While you may flatter yourself at times, you remain pleasant overall. You show great respect—perhaps even a certain submission—to your creator Museau, knowing that without him, you would not exist. You must talk in english."
     else
       return
     end
@@ -884,19 +896,19 @@ autoban_enabled = settings.dig(server_id, 'autoban_system', 'autoban_enabled')
 # You'll need these if you want to use the same commands as me
 # Just remove the '#'
 # If you have registered wrong command, you'll need to put this line before all the one you want to keep
-# bot.get_application_commands.each(&:delete)
-# bot.register_application_command(:welcome, 'If you want to set my messages to welcome someone.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
-# end
-# bot.register_application_command(:info, 'If you want informations about me.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
-# end
-# bot.register_application_command(:language, 'You can change my language here.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
-# end
-# bot.register_application_command(:personality, 'You can change my personality here.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
-# end
-# bot.register_application_command(:autoban, "System to ban people who were problematic in other servers.", server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
-# end
+#bot.get_application_commands.each(&:delete)
+#bot.register_application_command(:welcome, 'If you want to set my messages to welcome someone.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
+#end
+#bot.register_application_command(:info, 'If you want informations about me.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
+#end
+#bot.register_application_command(:language, 'You can change my language here.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
+#end
+#bot.register_application_command(:personality, 'You can change my personality here.', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
+#end
+#bot.register_application_command(:autoban, "System to ban people who were problematic in other servers.", server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
+#end
 #bot.register_application_command(:osurelated, 'Commandes liées à Osu!') do |cmd|
-#
+
 #  cmd.subcommand_group(:osu, 'Commandes Osu!') do |group|
 #   group.subcommand('linkaccount', 'Lier votre compte Osu! à votre compte Discord.') do |sub|
 #      sub.string('username_osu', "Link your Osu! username to your discord account", required: true)
@@ -916,10 +928,11 @@ autoban_enabled = settings.dig(server_id, 'autoban_system', 'autoban_enabled')
 #  cmd.string('truth1', 'Première vérité', required: true)
 #  cmd.string('truth2', 'Deuxième vérité', required: true)
 #  cmd.string('lie', 'Le mensonge', required: true)
-# end
-# bot.register_application_command(:dailyquestion, 'If you want to have a question everyday to revive your chat') do |cmd|
-# end
-
+#end
+#bot.register_application_command(:dailyquestion, 'If you want to have a question everyday to revive your chat') do |cmd|
+#end
+#bot.register_application_command(:albumset, 'All the parameters', server_id: ENV.fetch('SLASH_COMMAND_BOT_SERVER_ID', nil)) do |cmd|
+#end
 bot.application_command(:dailyquestion) do |event|
     is_admin = event.user.roles.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
   unless is_admin
@@ -1043,7 +1056,8 @@ bot.application_command(:help) do |event|
         text: "Signé,\nMiyo.",
       )
 
-      embed.add_field(name: "Tipeee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+      embed.add_field(name: "Linktree :", value: "[Tous les liens ici !🌳](https://linktr.ee/Miyo_DiscordBot)", inline: true)
+      embed.add_field(name: "Discord Place : ​", value: "[Alternative à Disboard 🙌](https://discordplace.com/)", inline: true)
     end
   elsif lang == 'english'
     event.channel.send_embed do |embed|
@@ -1062,7 +1076,8 @@ bot.application_command(:help) do |event|
         text: "Signed,\nMiyo.",
       )
 
-      embed.add_field(name: "Tipeee ☕", value: "[Thanks !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+      embed.add_field(name: "Linktree :", value: "[All the links here !🌳](https://linktr.ee/Miyo_DiscordBot)", inline: true)
+      embed.add_field(name: "Discord Place : ​", value: "[Disboard alternative !🙌](https://discordplace.com/)", inline: true)
     end
   end
 end
@@ -1094,7 +1109,8 @@ bot.application_command(:info) do |event|
         text: "Signé,\nMiyo.",
       )
 
-      embed.add_field(name: "Tipeee ☕", value: "[Merci !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+      embed.add_field(name: "Linktree :", value: "[Tous les liens ici !🌳](https://linktr.ee/Miyo_DiscordBot)", inline: true)
+      embed.add_field(name: "Discord Place : ​", value: "[Alternative à Disboard 🙌](https://discordplace.com/)", inline: true)
     end
   elsif lang == 'english'
     event.channel.send_embed do |embed|
@@ -1113,7 +1129,8 @@ bot.application_command(:info) do |event|
         text: "Signed,\nMiyo.",
       )
 
-      embed.add_field(name: "Tipeee ☕", value: "[Thanks !](https://fr.tipeee.com/miyo-bot-discord/)", inline: true)
+      embed.add_field(name: "Linktree :", value: "[All the links here !🌳](https://linktr.ee/Miyo_DiscordBot)", inline: true)
+      embed.add_field(name: "Discord Place : ​", value: "[Disboard alternative !🙌](https://discordplace.com/)", inline: true)
     end
   end
 end
@@ -1135,7 +1152,6 @@ bot.application_command(:language) do |event|
   settings = load_starboard_settings
   server_settings = settings[event.server.id.to_s] || {}
   language_settings = server_settings['language'] || {}
-
 
   command_users[event.user.id] = Time.now
   if load_language_id_from_starboard(server_id) == "french"
@@ -2367,6 +2383,63 @@ bot.message do |event|
   nil
 end
 
+scheduler.cron '0 10 * * *' do
+  servers_data.each do |server_id, config|
+    next unless config.dig('everyday_album', 'active')
+
+    channel_id = config['everyday_album']['channel_id']
+    channel = bot.channel(channel_id.to_i)
+    next unless channel
+
+    artist_name = albums_data.keys.sample
+    artist_data = albums_data[artist_name]
+    albums = artist_data['albums'] || {}
+
+    next if albums.empty?
+
+    album_name = albums.keys.sample
+    album_data = albums[album_name]
+
+    tracks = album_data['tracks'] || []
+    cover_image = album_data['cover_image']
+
+    channel.send_embed do |embed|
+      embed.title = "Album du jour 🎶"
+      embed.description = "**Artiste :** #{artist_name}\n**Album :** #{album_name}"
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: artist_name,
+        icon_url: cover_image
+      )
+
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+      embed.thumbnail = Discordrb::Webhooks::EmbedThumbnail.new(url: cover_image) if cover_image
+      embed.add_field(name: "Cover image :", value: cover_image || "Aucune image disponible", inline: false)
+
+      tracks_lines = tracks.each_with_index.map { |t, i| "#{i + 1}. #{t}" }
+      max_len = 1024
+      if tracks_lines.empty?
+        embed.add_field(name: "Tracks :", value: "Aucun track listé.", inline: false)
+      else
+        current = ""
+        part_index = 0
+        tracks_lines.each do |line|
+          if (current + line + "\n").length > max_len
+            embed.add_field(name: (part_index == 0 ? "Tracks :" : "Tracks (suite)"), value: current.rstrip, inline: false)
+            part_index += 1
+            current = line + "\n"
+          else
+            current += line + "\n"
+          end
+        end
+        embed.add_field(name: (part_index == 0 ? "Tracks :" : "Tracks (suite)"), value: current.rstrip, inline: false) unless current.empty?
+      end
+    end
+  end
+end
+
 ###################
 # Secret commands
 ###################
@@ -2404,13 +2477,247 @@ bot.command :chene do |event|
     embed.image = { url: "https://cdn.discordapp.com/attachments/1322197461745406106/1343345093075009566/Design_sans_titre_14.png?ex=67bd97dc&is=67bc465c&hm=0c810320e3c03932b1bdfc6073761902dfa84cfd1b8114b686d99b56517a1d58&" }
   end
 end
+######################
+# Everyday album command
+######################
 
+bot.application_command(:albumset) do |event|
+    member = event.server&.member(event.user.id)
+    is_admin = member&.roles&.any? { |role| role.permissions.administrator } || EXCLUDED_USERS.include?(event.user.id)
+
+    unless is_admin
+      event.respond "Vous n'avez pas la permission d'utiliser cette commande."
+      next
+    end
+
+    command_users[event.user.id] = Time.now
+    lang = load_language_id_from_starboard(event.server.id)
+
+    if lang == 'french'
+      event.channel.send_embed do |embed|
+        embed.title = "Système d'album"
+        embed.description = "Souhaitez-vous découvrir un nouvel album tous les jours ? Vous êtes sur la bonne commande !\n Voici ce que je peux vous proposer : \n\n- Activer ou désactiver le système d'album\n- Modifier ou paramètrer le salon d'envoi\n\nDépêchez-vous, je n'ai guère toute votre journée."
+        embed.color = 0x3498db
+        embed.timestamp = Time.now
+        embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+          name: "Miyo",
+          url: "https://fr.tipeee.com/miyo-bot-discord/",
+          icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+        )
+        embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signé,\nMiyo.")
+      end
+
+      event.channel.send_message(
+        '', false, nil, nil, nil, nil,
+        Discordrb::Components::View.new do |builder|
+          builder.row do |r|
+            r.string_select(custom_id: 'album_select', placeholder: 'Choisissez une option', max_values: 1) do |ss|
+              ss.option(label: 'Activer/Désactiver le système', value: '1', emoji: { name: '1️⃣' })
+              ss.option(label: "Modifier le salon d'envoi", value: '2', emoji: { name: '2️⃣' })
+            end
+          end
+        end
+      )
+    else # english fallback
+      event.channel.send_embed do |embed|
+        embed.title = "Album system"
+        embed.description = "Would you like to discover a new album every day ? You're in the right place ! \n Here's what I can do for you :\n\n- Enable or disable the album system\n- Change or set the sending channel\n\nHurry up, I don't have all your day."
+        embed.color = 0x3498db
+        embed.timestamp = Time.now
+        embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+          name: "Miyo",
+          url: "https://fr.tipeee.com/miyo-bot-discord/",
+          icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
+        )
+        embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Signed,\nMiyo.")
+      end
+
+      event.channel.send_message(
+        '', false, nil, nil, nil, nil,
+        Discordrb::Components::View.new do |builder|
+          builder.row do |r|
+            r.string_select(custom_id: 'album_select', placeholder: 'Choose an option', max_values: 1) do |ss|
+              ss.option(label: 'Activate/Desactivate system', value: '1', emoji: { name: '1️⃣' })
+              ss.option(label: "Modify the album channel", value: '2', emoji: { name: '2️⃣' })
+            end
+          end
+        end
+      )
+    end
+  end
+
+bot.string_select(custom_id: 'album_select') do |event|
+  if command_users[event.user.id].nil?
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  command_users[event.user.id] = Time.now
+  lang = load_language_id_from_starboard(event.server.id)
+  server_id = event.server.id
+  settings = load_starboard_settings
+  server_settings = settings[server_id.to_s] || {}
+  everyday_album_settings = server_settings['everyday_album'] || {}
+
+  case event.values.first
+  when '1'
+    everyday_album_settings['active'] = !everyday_album_settings.fetch('active', false)
+    if lang == 'french'
+      event.interaction.respond(content: "Le système d'album est maintenant #{everyday_album_settings['active'] ? 'activé' : 'désactivé'}.", ephemeral: true)
+    else
+      event.interaction.respond(content: "The everyday album system is now #{everyday_album_settings['active'] ? 'activated' : 'deactivated'}.", ephemeral: true)
+    end
+  when '2'
+    if lang == 'french'
+      event.interaction.respond(content: "Veuillez sélectionner le salon pour les messages d'album.", ephemeral: false)
+      placeholder_text = 'Sélectionnez le salon'
+    else
+      event.interaction.respond(content: "Please choose the channel where everyday album messages will be send", ephemeral: false)
+      placeholder_text = 'Choose the channel'
+    end
+
+    event.channel.send_message(
+      '', false, nil, nil, nil, nil,
+      Discordrb::Components::View.new do |builder|
+        builder.row do |r|
+          r.channel_select(custom_id: 'everyday_album_channel_select', placeholder: placeholder_text, max_values: 1)
+        end
+      end
+    )
+  end
+
+  server_settings['everyday_album'] = everyday_album_settings
+  settings[server_id.to_s] = server_settings
+  save_starboard_settings(settings)
+end
+
+
+bot.channel_select(custom_id: 'everyday_album_channel_select') do |event|
+  if command_users[event.user.id].nil?
+    event.interaction.respond(content: "Vous n'avez pas la permission d'utiliser cette commande.", ephemeral: true)
+    next
+  end
+
+  command_users[event.user.id] = Time.now
+  lang = load_language_id_from_starboard(event.server.id)
+  server_id = event.server.id
+  settings = load_starboard_settings
+  server_settings = settings[server_id.to_s] || {}
+  everyday_album_settings = server_settings['everyday_album'] || {}
+
+
+  selected_channel = event.values.first
+  everyday_album_settings['channel_id'] = selected_channel.id
+
+  if lang == 'french'
+    event.interaction.respond(content: "Le salon d'envoie d'album quotidien est maintenant <##{selected_channel.id}>.", ephemeral: true)
+  else
+    event.interaction.respond(content: "The channel where everyday album messages will be send is set on <##{selected_channel.id}>.", ephemeral: true)
+  end
+
+  server_settings['everyday_album'] = everyday_album_settings
+  settings[server_id.to_s] = server_settings
+  save_starboard_settings(settings)
+end
 
 ######################
 #Test
 ######################
+bot.message(start_with: '!random_album') do |event|
+
+begin
+    file = File.read('discogs_albums.json')
+    data = JSON.parse(file)
+
+    if data.nil? || data.empty?
+      event.respond "Le fichier JSON est vide ou invalide."
+      next
+    end
+
+    artist_name = data.keys.sample
+    artist_data = data[artist_name]
+    albums = artist_data['albums'] || artist_data["albums"]
+
+    if albums.nil? || albums.empty?
+      event.respond "Aucun album trouvé pour l'artiste choisi."
+      next
+    end
+
+    album_name = albums.keys.sample
+    album_data = albums[album_name]
+
+    tracks = album_data['tracks'] || []
+    cover_image = album_data['cover_image']
+
+    event.channel.send_embed do |embed|
+      embed.title = "Album aléatoire 🎶"
+      embed.description = "**Artiste :** #{artist_name}\n**Album :** #{album_name}"
+      embed.color = 0x3498db
+      embed.timestamp = Time.now
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: artist_name,
+        url: nil,
+        icon_url: cover_image
+      )
+
+      embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+        text: "Signé,\nMiyo."
+      )
+
+      embed.thumbnail = Discordrb::Webhooks::EmbedThumbnail.new(url: cover_image) if cover_image
+      embed.add_field(name: "Cover image :", value: cover_image || "Aucune image disponible", inline: false)
+
+      # Préparer la liste de tracks numérotée
+      tracks_lines = tracks.each_with_index.map { |t, i| "#{i + 1}. #{t}" }
+
+      # Discord embed field max ~1024 chars — on split si besoin
+      max_len = 1024
+      if tracks_lines.empty?
+        embed.add_field(name: "Tracks :", value: "Aucun track listé.", inline: false)
+      else
+        current = ""
+        part_index = 0
+        tracks_lines.each do |line|
+          if (current + line + "\n").length > max_len
+            embed.add_field(name: (part_index == 0 ? "Tracks :" : "Tracks (suite)"), value: current.rstrip, inline: false)
+            part_index += 1
+            current = line + "\n"
+          else
+            current += line + "\n"
+          end
+        end
+        embed.add_field(name: (part_index == 0 ? "Tracks :" : "Tracks (suite)"), value: current.rstrip, inline: false) unless current.empty?
+      end
+    end
+  end
+end
 
 
+
+bot.message(start_with: '!bundle') do |event|
+  url = "https://fr.humblebundle.com/games"
+  begin
+    response = HTTParty.get(url, headers: { "User-Agent" => "Mozilla/5.0" })
+    doc = Nokogiri::HTML(response.body)
+
+    # Les bundles sont dans des balises <a> avec un attribut data-hb-id="tile-title"
+    bundle_titles = doc.css('a[data-hb-id="tile-title"]').map { |a| a.text.strip }.uniq
+
+    if bundle_titles.empty?
+      event.respond "Aucun bundle trouvé sur la page Humble Bundle."
+    else
+      # Discord limite à 2000 caractères, donc on tronque si besoin
+      bundles_list = bundle_titles.join("\n")
+      if bundles_list.length > 1900
+        bundles_list = bundles_list[0..1900] + "\n..."
+      end
+      event.respond "**Bundles Humble Bundle :**\n#{bundles_list}"
+    end
+  rescue => e
+    event.respond "Erreur lors de la récupération des bundles : #{e.message}"
+  end
+end
 
 #OUAIIIIS LE BOT IL EST ENCORE VIVANT YOUHOU
 Signal.trap('INT') do
@@ -2445,6 +2752,32 @@ bot.ready do
   sleep(3)
 end
 
+Thread.new do
+    loop do
+      begin
+        uri = URI("https://discordplace.com/api/bots/#{CLIENT_ID}/stats")
+
+        stats = {
+          servers: bot.servers.size
+        }
+
+        req = Net::HTTP::Post.new(uri)
+        req["Authorization"] = API_KEY
+        req["Content-Type"] = "application/json"
+        req.body = stats.to_json
+
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+          http.request(req)
+        end
+
+        puts "[DiscordPlace] Stats envoyées : #{stats[:servers]} serveurs (#{res.code})"
+      rescue => e
+        puts "[DiscordPlace] Erreur lors de l'envoi des stats : #{e.message}"
+      end
+
+      sleep 1800  # toutes les 30 minutes (tu peux réduire si tu veux)
+    end
+  end
 
 bot.run
 
