@@ -1,11 +1,11 @@
 # Miyo - Discord Bot
 
 ## Forewords
-Miyo is a discord bot, which is open source. You can use the code freely, but please consider tagging me somewhere. She's updated quite often
-Miyo is my personal bot. It may not be the best in terms of optimisations, however, it works fine.
-I hope it can be used as a model for starting or upgrading your Ruby bot.
-Nevertheless, I won't share any data. Build your own database.
-We decline every responsabilities in your online activities with the bot. This include streams, videos, screenshots... If you want to make content about her, do as you please, but we're not responsible.
+- Miyo is a discord bot, which is open source. You can use the code freely, but please consider tagging me somewhere. She's updated quite often
+- Miyo is my personal bot. It may not be the best in terms of optimisations, however, it works fine.
+- I hope it can be used as a model for starting or upgrading your Ruby bot.
+- Nevertheless, I won't share any data. Build your own database.
+- We decline every responsabilities in your online activities with the bot. This include streams, videos, screenshots... If you want to make content about her, do as you please, but we're not responsible.
 
 ## Dependencies
 You have several dependencies to install before Miyo can work if you plan to use it as a starting point.
