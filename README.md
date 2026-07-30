@@ -58,7 +58,3 @@ To Linounonu who made Miyo's pfp !
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&legend=top-left&sealed_token=RjDIwG6WEq7lJ7oiLZq3PzIoGb7MiCM3O6ja6vK-my5cxQQm7Ui4hsE7YFT-1e5EipjVYg3YA--N4A7lvtCy00PprZpg8MngxlPGV_mbjpKllFD_YbbjU6J2EXmKxYkGNC4EcGdycr685em94U5IVnYp9DW47EuTPZ446BhnA4Voqkceey0XQsBzJ-hB" />
  </picture>
 </a>
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Muse-haut/Miyo&type=Date)](https://www.star-history.com/#Muse-haut/Miyo&Date)
