@@ -51,10 +51,15 @@ To Cyn, for helping me with some parts of the code!
 To Linounonu who made Miyo's pfp !
 ## Star History
 
+## Star History
+
 <a href="https://www.star-history.com/?repos=Muse_haut%2FMiyo&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&theme=dark&legend=top-left&sealed_token=RjDIwG6WEq7lJ7oiLZq3PzIoGb7MiCM3O6ja6vK-my5cxQQm7Ui4hsE7YFT-1e5EipjVYg3YA--N4A7lvtCy00PprZpg8MngxlPGV_mbjpKllFD_YbbjU6J2EXmKxYkGNC4EcGdycr685em94U5IVnYp9DW47EuTPZ446BhnA4Voqkceey0XQsBzJ-hB" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&legend=top-left&sealed_token=RjDIwG6WEq7lJ7oiLZq3PzIoGb7MiCM3O6ja6vK-my5cxQQm7Ui4hsE7YFT-1e5EipjVYg3YA--N4A7lvtCy00PprZpg8MngxlPGV_mbjpKllFD_YbbjU6J2EXmKxYkGNC4EcGdycr685em94U5IVnYp9DW47EuTPZ446BhnA4Voqkceey0XQsBzJ-hB" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&theme=dark&legend=top-left&sealed_token=nJHmsbXcUy51V4RPI3tkEsCPzDpuq9U2dvusbwwG326YURkbQz9OlspbkE0lmRFkiLk6tjfRDdir4dlq3sTW1pfM0d1nV3Kx_vBuV0A1GgZe1GovyrwEDjk1Fz2OAhFT8tDkjy5zJQY9d8r5kwiAJrgMKnPpbuqsbPpJ1p928Rkptn1eYXWqu42nxiZf" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&legend=top-left&sealed_token=nJHmsbXcUy51V4RPI3tkEsCPzDpuq9U2dvusbwwG326YURkbQz9OlspbkE0lmRFkiLk6tjfRDdir4dlq3sTW1pfM0d1nV3Kx_vBuV0A1GgZe1GovyrwEDjk1Fz2OAhFT8tDkjy5zJQY9d8r5kwiAJrgMKnPpbuqsbPpJ1p928Rkptn1eYXWqu42nxiZf" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&legend=top-left&sealed_token=nJHmsbXcUy51V4RPI3tkEsCPzDpuq9U2dvusbwwG326YURkbQz9OlspbkE0lmRFkiLk6tjfRDdir4dlq3sTW1pfM0d1nV3Kx_vBuV0A1GgZe1GovyrwEDjk1Fz2OAhFT8tDkjy5zJQY9d8r5kwiAJrgMKnPpbuqsbPpJ1p928Rkptn1eYXWqu42nxiZf" />
+ </picture>
+</a>
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&legend=top-left&sealed_token=RjDIwG6WEq7lJ7oiLZq3PzIoGb7MiCM3O6ja6vK-my5cxQQm7Ui4hsE7YFT-1e5EipjVYg3YA--N4A7lvtCy00PprZpg8MngxlPGV_mbjpKllFD_YbbjU6J2EXmKxYkGNC4EcGdycr685em94U5IVnYp9DW47EuTPZ446BhnA4Voqkceey0XQsBzJ-hB" />
  </picture>
 </a>
