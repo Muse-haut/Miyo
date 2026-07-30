@@ -48,7 +48,7 @@ Here's the list with all the commands that Miyo has :
 
 ## Acknowledgements 
 To Cyn, for helping me with some parts of the code!
-To Roxas, and his integration of Miyo in his bot [Glados](https://aperture-sciences.com/)
+To Linounonu who made Miyo's pfp !
 
 ## Star History
 
