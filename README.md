@@ -50,6 +50,7 @@ Here's the list with all the commands that Miyo has :
 
 ## Acknowledgements 
 To Cyn, for helping me with some parts of the code!
+
 To Linounonu, for making Miyo's pfp !
 
 ## Star History
