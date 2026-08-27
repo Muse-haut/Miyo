@@ -1,11 +1,11 @@
 # Miyo - Discord Bot
 
 ## Forewords
-- Miyo is a discord bot, which is open source. You can use the code freely, but please consider tagging me somewhere. She's updated quite often
-- Miyo is my personal bot. It may not be the best in terms of optimisations, however, it works fine.
-- I hope it can be used as a model for starting or upgrading your Ruby bot.
-- Nevertheless, I won't share any data. Build your own database.
-- We decline every responsabilities in your online activities with the bot. This include streams, videos, screenshots... If you want to make content about her, do as you please, but we're not responsible.
+Miyo is a discord bot, which is open source. You can use the code freely, but please consider tagging me somewhere. She's updated frequently (more than Half Life 3 at least)
+Miyo is my personal bot. It may not be the best in terms of optimisations, however, it works fine.
+I hope it can be used as a model for starting or upgrading your Ruby bot.
+Nevertheless, I won't share any data. Build your own database.
+We decline every responsabilities in your online activities with the bot. This include streams, videos, screenshots... If you want to make content about her, do as you please, but we're not responsible.
 
 ## Dependencies
 You have several dependencies to install before Miyo can work if you plan to use it as a starting point.
@@ -24,20 +24,22 @@ Here's the list :
 If you want to install them in one command, here you go :
 
 ```
-gem install discordrb httparty json nokogiri rufus-scheduler tzinfo tzinfo-data
+gem install discordrb httparty json nokogiri rufus-scheduler tzinfo tzinfo-data 
 ```
 ## Commands
 
 Here's the list with all the commands that Miyo has :
-- /Album : Moderators only. This command allows the user to set if the user wants or not Miyo to send an album everyday. Also, the user can set where the album are sent.
-- /Album search : This command allows the user to search through my database some album, rate the albums and tracks.
-- /automute : Moderators only. This command allows the user to set an automute, which is based on how many similars message in a row someone has sent. Can be useful sometime because the bot check the whole server, rather than just a part of it.
+- /albumset : Administrator only. Allows the user to set a daily message send by Miyo with a random Album from her database.
+- /antispam : Administrator only. Allows the user to set an autotimout, which is based on how many similars message in a row someone has sent. Can be usefulsometime because the bot check the whole server, rather than just a part of it. It can also send the message to a specific channel to check if it was a false positive.
+- /ban : Administrator only. Allows the user to ban someone. 
 - /data : Allows the user to disable some of the functionalities that requires the use of collected data.
+- /dailyquestion : Administrator only. Allows the user to set a daily message with a random question from her database.
+- /exclure : Administrator only. Allows the user to timeout someone.
 - /help : Allows the user to check all of Miyo's commands.
 - /info : Allows the user to see some basic info about Miyo.
-- /language : Moderator only. Allows the user to set Miyo's language on the server.
-- /personnality : Moderator only. Allows the user to change the Miyo's personnality when it respond with its AI.
-- /welcome : Moderator only. This command allows the user to set if the user wants or not Miyo to send a message to welcome the new persons on the server. Also, the user can set where these message are sent.
+- /kick : Administrator only. Allows the user to kick someone.
+- /personalité : Administrator only. Allows the user to change the Miyo's personnality when it respond with its AI.
+- /welcome : Administrator only. This command allows the user to set if the user wants or not Miyo to send a message to welcome the new persons on the server. Also, the user can set where these message are sent.
 
 ## Other informations
 ---  
@@ -48,15 +50,8 @@ Here's the list with all the commands that Miyo has :
 
 ## Acknowledgements 
 To Cyn, for helping me with some parts of the code!
-To Linounonu who made Miyo's pfp !
+To Linounonu, for making Miyo's pfp !
+
 ## Star History
 
-<a href="https://www.star-history.com/?repos=Muse_haut%2FMiyo&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&theme=dark&legend=top-left&sealed_token=nJHmsbXcUy51V4RPI3tkEsCPzDpuq9U2dvusbwwG326YURkbQz9OlspbkE0lmRFkiLk6tjfRDdir4dlq3sTW1pfM0d1nV3Kx_vBuV0A1GgZe1GovyrwEDjk1Fz2OAhFT8tDkjy5zJQY9d8r5kwiAJrgMKnPpbuqsbPpJ1p928Rkptn1eYXWqu42nxiZf" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&legend=top-left&sealed_token=nJHmsbXcUy51V4RPI3tkEsCPzDpuq9U2dvusbwwG326YURkbQz9OlspbkE0lmRFkiLk6tjfRDdir4dlq3sTW1pfM0d1nV3Kx_vBuV0A1GgZe1GovyrwEDjk1Fz2OAhFT8tDkjy5zJQY9d8r5kwiAJrgMKnPpbuqsbPpJ1p928Rkptn1eYXWqu42nxiZf" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Muse_haut/Miyo&type=date&legend=top-left&sealed_token=nJHmsbXcUy51V4RPI3tkEsCPzDpuq9U2dvusbwwG326YURkbQz9OlspbkE0lmRFkiLk6tjfRDdir4dlq3sTW1pfM0d1nV3Kx_vBuV0A1GgZe1GovyrwEDjk1Fz2OAhFT8tDkjy5zJQY9d8r5kwiAJrgMKnPpbuqsbPpJ1p928Rkptn1eYXWqu42nxiZf" />
- </picture>
-</a>
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=Muse-haut/Miyo&type=Date)](https://www.star-history.com/#Muse-haut/Miyo&Date)
