@@ -52,7 +52,3 @@ Here's the list with all the commands that Miyo has :
 To Cyn, for helping me with some parts of the code!
 
 To Linounonu, for making Miyo's pfp !
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Muse-haut/Miyo&type=Date)](https://www.star-history.com/#Muse-haut/Miyo&Date)
