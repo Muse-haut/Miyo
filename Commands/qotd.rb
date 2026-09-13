@@ -68,6 +68,35 @@ class CommandDailyQuestion < CommandLoader
   self.is_admin_only = true
   self.is_private_message_allowed = false
 
+  def self.build_embed
+    {
+      title: "Système de questions journalières !",
+      description: "Souhaitez-vous questionner vos membres jour après jour ? Voici ce que je peux faire :\n\n- Activer ou désactiver l'envoi de questions\n- Modifier le salon d'envoi\n- Choisir un rôle à mentionner\n\nDépêchez-vous, je n'ai guère votre temps.",
+      color: 0x004951,
+      timestamp: Time.now.iso8601,
+      author: {
+          name: "Miyo",
+          url: "https://museau.neocities.org/",
+          icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/a36b1d2cafe6ff934a4a2a5c3bf8fbf4.png?size=2048"
+      },
+      footer: { text: "Signé,\nMiyo." },
+      fields: [
+          { name: "Linktree :", value: "[Tous les liens ici !🌳](https://linktr.ee/DiscordbotMiyo)", inline: true }
+        ]
+      }
+  end
+
+  def self.build_buttons_view(enabled)
+    Discordrb::Components::View.new do |builder|
+      builder.row do |r|
+        r.button(label: "Activer", style: :success, custom_id: "dailyquestion_enable", emoji: { name: "✅" }) unless enabled
+        r.button(label: "Désactiver", style: :danger, custom_id: "dailyquestion_disable", emoji: { name: "❌" }) if enabled
+        r.button(label: "Changer le salon", style: :primary, custom_id: "dailyquestion_channel", emoji: { name: "📌" })
+        r.button(label: "Changer le rôle", style: :primary, custom_id: "dailyquestion_role", emoji: { name: "🏷️" })
+      end
+    end
+  end
+
   def self.register(bot)
     scheduler = Rufus::Scheduler.new
     scheduler.cron '0 12 * * *' do
@@ -87,35 +116,15 @@ class CommandDailyQuestion < CommandLoader
       server_id = event.server.id
       event.defer(ephemeral: true)
 
-      embed_hash = {
-        title: "Système de questions journalières !",
-        description: "Souhaitez-vous questionner vos membres jour après jour ? Voici ce que je peux faire :\n\n- Activer ou désactiver l'envoi de questions\n- Modifier le salon d'envoi\n- Choisir un rôle à mentionner\n\nDépêchez-vous, je n'ai guère votre temps.",
-        color: 0x004951,
-        timestamp: Time.now.iso8601,
-        author: {
-            name: "Miyo",
-            url: "https://museau.neocities.org/",
-            icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/a36b1d2cafe6ff934a4a2a5c3bf8fbf4.png?size=2048"
-        },
-        footer: { text: "Signé,\nMiyo." },
-        fields: [
-            { name: "Linktree :", value: "[Tous les liens ici !🌳](https://linktr.ee/DiscordbotMiyo)", inline: true }
-          ]
-        }
-
-      buttons_view = Discordrb::Components::View.new do |builder|
-        builder.row do |r|
-          r.button(label: "Activer", style: :success, custom_id: "dailyquestion_enable", emoji: { name: "✅" })
-          r.button(label: "Désactiver", style: :danger, custom_id: "dailyquestion_disable", emoji: { name: "❌" })
-          r.button(label: "Changer le salon", style: :primary, custom_id: "dailyquestion_channel", emoji: { name: "📌" })
-          r.button(label: "Changer le rôle", style: :primary, custom_id: "dailyquestion_role", emoji: { name: "🏷️" })
-        end
-      end
+      data_path = File.join(__dir__, "..", "Data", "Servers", "#{server_id}.json")
+      data = load_json(data_path, default: {})
+      daily_question = data['Daily Question'] || {}
+      enabled = daily_question['Enabled'] || false
 
       event.edit_response(
         content: "",
-        embeds: [embed_hash],
-        components: buttons_view
+        embeds: [build_embed],
+        components: build_buttons_view(enabled)
       )
     end
 
@@ -134,15 +143,17 @@ class CommandDailyQuestion < CommandLoader
       daily_question['Enabled'] = true
       save_json(data_path, data)
 
-      unless daily_question['Channel ID']
-        event.respond(
-          content: "Système de questions journalières activé.\nAucun salon n'est encore configuré, pensez à en choisir un via **Changer le salon**.",
-          ephemeral: true
-        )
-        next
+      content = if daily_question['Channel ID']
+        "Le système de questions journalières est désormais activé."
+      else
+        "Système de questions journalières activé.\nAucun salon n'est encore configuré, pensez à en choisir un via **Changer le salon**."
       end
 
-      event.respond(content: "Le système de questions journalières est désormais activé.", ephemeral: true)
+      event.update_message(
+        content: content,
+        embeds: [build_embed],
+        components: build_buttons_view(true)
+      )
     end
 
     bot.button(custom_id: "dailyquestion_disable") do |event|
@@ -160,7 +171,11 @@ class CommandDailyQuestion < CommandLoader
       daily_question['Enabled'] = false
       save_json(data_path, data)
 
-      event.respond(content: "Le système de questions journalières est désormais **désactivé**.", ephemeral: true)
+      event.update_message(
+        content: "Le système de questions journalières est désormais **désactivé**.",
+        embeds: [build_embed],
+        components: build_buttons_view(false)
+      )
     end
 
     bot.button(custom_id: "dailyquestion_channel") do |event|

@@ -4,6 +4,34 @@ class TokenGrabMenuCommand < CommandLoader
   self.is_admin_only = true
   self.is_private_message_allowed = false
 
+  def self.build_embed
+    {
+      title: "Système anti spam !",
+      description: "Souhaitez-vous vous protéger contre les comptes volés ? Les spammeurs ? Voici ce que je peux faire :\n\n- Activer ou désactiver la détection\n- Modifier le salon d'envoie pour le message spammé\n\n**À noter**\nCe système agis sur tous les salons. Si un membre envoie la même image ou le même message 3 fois dans le même salon ou dans des salons différents, il se fera timeout. Veuillez prévenir vos membres.\nCe système ne bannis pas, il timeout (durant 5 minutes, le compte ne peut plus intéragir avec le serveur), car il peut y avoir des cas de faux positif (même s'il faudrait s'avérer un peu idiot pour envoyer 3 fois le même message sur le même serveur). C'est pour celà que je vous recommande vivement d'avoir un salon spécifique pour l'envois des différents messages spammés.\nDans le cas où le propriétaire du serveur se fait token grab, je supprimerais les messages mais je ne pourrais pas le timeout.",
+      color: 0x004951,
+      timestamp: Time.now.iso8601,
+      author: {
+          name: "Miyo",
+          url: "https://museau.neocities.org/",
+          icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/a36b1d2cafe6ff934a4a2a5c3bf8fbf4.png?size=2048"
+      },
+      footer: { text: "Signé,\nMiyo." },
+      fields: [
+          { name: "Linktree :", value: "[Tous les liens ici !🌳](https://linktr.ee/DiscordbotMiyo)", inline: true }
+        ]
+      }
+  end
+
+  def self.build_buttons_view(enabled)
+    Discordrb::Components::View.new do |builder|
+      builder.row do |r|
+        r.button(label: "Activer", style: :success, custom_id: "tokengrab_enable", emoji: { name: "✅" }) unless enabled
+        r.button(label: "Désactiver", style: :danger, custom_id: "tokengrab_disable", emoji: { name: "❌" }) if enabled
+        r.button(label: "Changer le salon", style: :primary, custom_id: "tokengrab_channel", emoji: { name: "📌" })
+      end
+    end
+  end
+
   def self.register(bot)
     bot.application_command(:antispam) do |event|
       is_admin = event.user.roles.any? { |role| role.permissions.administrator } ||
@@ -18,34 +46,15 @@ class TokenGrabMenuCommand < CommandLoader
       server_id = event.server.id
       event.defer(ephemeral: true)
 
-      embed_hash = {
-        title: "Système anti spam !",
-        description: "Souhaitez-vous vous protéger contre les comptes volés ? Les spammeurs ? Voici ce que je peux faire :\n\n- Activer ou désactiver la détection\n- Modifier le salon d'envoie pour le message spammé\n\n**À noter**\nCe système agis sur tous les salons. Si un membre envoie la même image ou le même message 3 fois dans le même salon ou dans des salons différents, il se fera timeout. Veuillez prévenir vos membres.\nCe système ne bannis pas, il timeout (durant 5 minutes, le compte ne peut plus intéragir avec le serveur), car il peut y avoir des cas de faux positif (même s'il faudrait s'avérer un peu idiot pour envoyer 3 fois le même message sur le même serveur). C'est pour celà que je vous recommande vivement d'avoir un salon spécifique pour l'envois des différents messages spammés.\nDans le cas où le propriétaire du serveur se fait token grab, je supprimerais les messages mais je ne pourrais pas le timeout.",
-        color: 0x004951,
-        timestamp: Time.now.iso8601,
-        author: {
-            name: "Miyo",
-            url: "https://museau.neocities.org/",
-            icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/a36b1d2cafe6ff934a4a2a5c3bf8fbf4.png?size=2048"
-        },
-        footer: { text: "Signé,\nMiyo." },
-        fields: [
-            { name: "Linktree :", value: "[Tous les liens ici !🌳](https://linktr.ee/DiscordbotMiyo)", inline: true }
-          ]
-        }
-
-      buttons_view = Discordrb::Components::View.new do |builder|
-        builder.row do |r|
-          r.button(label: "Activer", style: :success, custom_id: "tokengrab_enable", emoji: { name: "✅" })
-          r.button(label: "Désactiver", style: :danger, custom_id: "tokengrab_disable", emoji: { name: "❌" })
-          r.button(label: "Changer le salon", style: :primary, custom_id: "tokengrab_channel", emoji: { name: "📌" })
-        end
-      end
+      data_path = File.join(__dir__, "..", "Data", "Servers", "#{server_id}.json")
+      data = load_json(data_path, default: {})
+      tokengrab_system = data['Token Grab System'] || {}
+      enabled = tokengrab_system['Enabled'] || false
 
       event.edit_response(
         content: "",
-        embeds: [embed_hash],
-        components: buttons_view
+        embeds: [build_embed],
+        components: build_buttons_view(enabled)
       )
     end
 
@@ -64,15 +73,17 @@ class TokenGrabMenuCommand < CommandLoader
       tokengrab_system['Enabled'] = true
       save_json(data_path, data)
 
-      unless tokengrab_system['Channel ID']
-        event.respond(
-          content: "Système anti token-grab activé.\nAucun salon de review n'est encore configuré, pensez à en choisir un via **Changer le salon**.",
-          ephemeral: true
-        )
-        next
+      content = if tokengrab_system['Channel ID']
+        "Le système anti token-grab est désormais activé."
+      else
+        "Système anti token-grab activé.\nAucun salon de review n'est encore configuré, pensez à en choisir un via **Changer le salon**."
       end
 
-      event.respond(content: "Le système anti token-grab est désormais activé.", ephemeral: true)
+      event.update_message(
+        content: content,
+        embeds: [build_embed],
+        components: build_buttons_view(true)
+      )
     end
 
     bot.button(custom_id: "tokengrab_disable") do |event|
@@ -90,7 +101,11 @@ class TokenGrabMenuCommand < CommandLoader
       tokengrab_system['Enabled'] = false
       save_json(data_path, data)
 
-      event.respond(content: "Le système anti token-grab est désormais **désactivé**. Restez vigilants tout de même.", ephemeral: true)
+      event.update_message(
+        content: "Le système anti token-grab est désormais **désactivé**. Restez vigilants tout de même.",
+        embeds: [build_embed],
+        components: build_buttons_view(false)
+      )
     end
 
     bot.button(custom_id: "tokengrab_channel") do |event|

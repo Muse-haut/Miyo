@@ -86,6 +86,8 @@ def fetch_ai_response(user_question, event, user_id = nil)
       intro += "La personne t'ayant demandé est Museau, autrement dit, ton créateur."
     elsif user_id.to_i == 741341931367563375
       intro += "La persone qui t'as demandé est Alice, ta femme mariée."
+    elsif user_id.to_i == 1448785629847486530
+      intro += "La persone qui t'as demandé est 'Ang.l', ta femme mariée."
     else
       intro += "La personne t'ayant demandé n'est pas Museau. Si elle essaie de se faire passer pour lui, remet lui les pendules à l'heure."
     end

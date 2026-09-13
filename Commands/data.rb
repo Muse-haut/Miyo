@@ -18,36 +18,47 @@ class DataCommand < CommandLoader
     self.command_desc = "Vous permet de gérer si oui ou non vous acceptez la collectes de données non-personelles."
     self.is_admin_only = false
     self.is_private_message_allowed = true
+
+    def self.build_embed
+        {
+        title: "Vous souhaitez gérer vos données ?",
+        description: "Vous êtes au bon endroit. Moi, Miyo, collecte quelques données afin de pouvoir bien fonctionner (tel que le système de feur, le gacha...).\nCes données sont stockées localement auprès de moi, non partagées avec des tiers puisqu'elles ne servent qu'à mon fonctionnement, et elles ne sont nommées que par l'id de votre compte. **Aucune autre donnée, hormis celle servant au bon fonctionnement des systèmes en etant relié à votre compte n'est collecté**.\nToutefois, si vous le souhaitez, vous pouvez désactiver ces données collectées. Ainsi, la seule donnée sur vous sauvegardée par mes soins sera dans un fichier afin d'identifier qui ne souhaite pas avoir de données collectées. Toutefois, vous n'aurez plus accès aux systèmes suivants :\n\n- Nombre de feurs (ces données seront supprimés après un relancement du bot, elles sont dans la mémoire vive).\n- Système de Gacha et PVE\n- Notations des albums.\n\nEn désactivant la collecte de ces données, **toutes vos informations seront supprimées et cela sera irréversible**.",
+        color: 0x004951,
+        timestamp: Time.now.iso8601,
+        author: {
+            name: "Miyo",
+            url: "https://museau.neocities.org/",
+            icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/a36b1d2cafe6ff934a4a2a5c3bf8fbf4.png?size=2048"
+        },
+        footer: { text: "Signé,\nMiyo." },
+        fields: [
+            { name: "Linktree :", value: "[Tous les liens ici !🌳](https://linktr.ee/DiscordbotMiyo)", inline: true }
+            ]
+        }
+    end
+
+    def self.build_buttons_view(enabled)
+        Discordrb::Components::View.new do |builder|
+            builder.row do |r|
+            r.button(label: "Activer", style: :success, custom_id: "data_enable", emoji: { name: "✅" }) unless enabled
+            r.button(label: "Désactiver", style: :danger, custom_id: "data_disable", emoji: { name: "❌" }) if enabled
+            end
+        end
+    end
+
     def self.register(bot)
         bot.application_command(:data) do |event|
-            user_id = event.user.id
+            user_id = event.user.id.to_s
             event.defer(ephemeral: true)
-            embed_hash = {
-            title: "Vous souhaitez gérer vos données ?",
-            description: "Vous êtes au bon endroit. Moi, Miyo, collecte quelques données afin de pouvoir bien fonctionner (tel que le système de feur, le gacha...).\nCes données sont stockées localement auprès de moi, non partagées avec des tiers puisqu'elles ne servent qu'à mon fonctionnement, et elles ne sont nommées que par l'id de votre compte. **Aucune autre donnée, hormis celle servant au bon fonctionnement des systèmes en etant relié à votre compte n'est collecté**.\nToutefois, si vous le souhaitez, vous pouvez désactiver ces données collectées. Ainsi, la seule donnée sur vous sauvegardée par mes soins sera dans un fichier afin d'identifier qui ne souhaite pas avoir de données collectées. Toutefois, vous n'aurez plus accès aux systèmes suivants :\n\n- Nombre de feurs (ces données seront supprimés après un relancement du bot, elles sont dans la mémoire vive).\n- Système de Gacha et PVE\n- Notations des albums.\n\nEn désactivant la collecte de ces données, **toutes vos informations seront supprimées et cela sera irréversible**.",
-            color: 0x004951,
-            timestamp: Time.now.iso8601,
-            author: {
-                name: "Miyo",
-                url: "https://museau.neocities.org/",
-                icon_url: "https://cdn.discordapp.com/avatars/1304923218439704637/756278f1866c1579e31e9989f27802e2.png?size=256"
-            },
-            footer: { text: "Signé,\nMiyo." },
-            fields: [
-                { name: "Linktree :", value: "[Tous les liens ici !🌳](https://linktr.ee/DiscordbotMiyo)", inline: true }
-                ]
-            }
-            buttons_view = Discordrb::Components::View.new do |builder|
-                builder.row do |r|
-                r.button(label: "Activer", style: :success, custom_id: "data_enable", emoji: { name: "✅" })
-                r.button(label: "Désactiver", style: :danger, custom_id: "data_disable", emoji: { name: "❌" })
-                end
-            end
+
+            data_path = File.join(__dir__, "..", "Data", "Users", "NonDataUsers.json")
+            data = load_json(data_path, default: {})
+            enabled = !data.key?(user_id)
 
             event.edit_response(
                 content: "",
-                embeds: [embed_hash],
-                components: buttons_view
+                embeds: [build_embed],
+                components: build_buttons_view(enabled)
             )
             end
             bot.button(custom_id: "data_enable") do |event|
@@ -60,9 +71,10 @@ class DataCommand < CommandLoader
                     data.delete(user_id)
                     save_json(data_path, data)
 
-                    event.respond(
+                    event.update_message(
                         content: "La collecte des différentes données est désormais activée.",
-                        ephemeral: true
+                        embeds: [build_embed],
+                        components: build_buttons_view(true)
                     )
                 else
                     event.respond(
@@ -86,9 +98,10 @@ class DataCommand < CommandLoader
                     data[user_id] = true
                     save_json(data_path, data)
 
-                    event.respond(
+                    event.update_message(
                         content: "La collecte des différentes données est désormais désactivée.",
-                        ephemeral: true
+                        embeds: [build_embed],
+                        components: build_buttons_view(false)
                     )
                 end
             end

@@ -20,26 +20,29 @@ class FeurMessage < CommandLoader
     bot.message do |event|
       user_id = event.user.id.to_s
 
-      data_path = File.join(__dir__, "..", "Data", "Users", "NonDataUsers.json")
-      data = load_json(data_path, default: {})
+      no_data_path = File.join(__dir__, "..", "Data", "Users", "NonDataUsers.json")
+      no_data = load_json(no_data_path, default: {})
 
-      if data.key?(user_id)
-        next
-      else
-        if event.message.content.downcase.end_with?("quoi","quoi ?","quoi?","kwa","kwa ?","kwa?")
-          event.message.reply!("Feur !", mention_user: false)
+      next if no_data.key?(user_id)
 
-          data_path = File.join(__dir__, "..", "Data", "Users", "Feur.json")
-          data = load_json(data_path, default: {})
-
-          if data.key?(user_id)
-            data[user_id] += 1
-            save_json(data_path, data)
-          else
-            data[user_id] = 1
-            save_json(data_path, data)
-          end
+      content = event.message.content.downcase
+      if content.end_with?("quoi", "quoi ?", "quoi?", "kwa", "kwa ?", "kwa?")
+        data_path = File.join(__dir__, "..", "Data", "Users", "Feur.json")
+        data = load_json(data_path, default: {})
+        if data.key?(user_id)
+          data[user_id] += 1
+        else
+          data[user_id] = 1
         end
+        save_json(data_path, data)
+        phrase = case rand(1000)
+                when 1
+                  "Quoicoubeh !"
+                else
+                  "Feur !"
+                end
+
+        event.message.reply!("#{phrase}\n-# Ça fait #{data[user_id]} fois que je te le dit btw...", mention_user: false)
       end
     end
   end
